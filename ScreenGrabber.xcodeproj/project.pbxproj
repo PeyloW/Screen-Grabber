@@ -310,13 +310,8 @@
 		C05733C808A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = "Screen Grabber";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
@@ -326,15 +321,7 @@
 		C05733C908A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = (
-					ppc,
-					i386,
-				);
-				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application: Fredrik Olsson";
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				GCC_MODEL_TUNING = G5;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Applications";
 				PRODUCT_NAME = "Screen Grabber";
 				WRAPPER_EXTENSION = app;
 			};
@@ -356,6 +343,7 @@
 		C05733CD08A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application: Fredrik Olsson";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_ENABLE_OBJC_GC = required;

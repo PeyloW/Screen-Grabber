@@ -53,7 +53,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFile</key>
-	<string>ScreenGrabber</string>
+	<string>ScreenGrabber.icns</string>
 	<key>CFBundleIdentifier</key>
 	<string>se.peylow.Screen-Grabber</string>
 	<key>CFBundleInfoDictionaryVersion</key>
