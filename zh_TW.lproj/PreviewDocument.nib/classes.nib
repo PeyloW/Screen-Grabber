@@ -1,0 +1,17 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {captureImages = id; }; 
+            CLASS = FOPreviewDocument; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                mainWindow = NSWindow; 
+                progressIndicator = NSProgressIndicator; 
+                progressSheet = NSPanel; 
+            }; 
+            SUPERCLASS = NSDocument; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
