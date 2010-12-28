@@ -284,7 +284,7 @@
 
 - (NSAttributedString *)_waterMark
 {
-    NSString *text = @"ScreenGrabber 2.0";
+    NSString *text = @"ScreenGrabber 2.1";
     NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
     NSFont *font = [NSFont fontWithName:@"Lucida Grande Bold" size:32.0];
     [attrs setObject:font forKey:NSFontAttributeName];
@@ -335,7 +335,7 @@
     font = [NSFont fontWithName:@"Lucida Grande Bold" size:16.0];
     [attrs setObject:font forKey:NSFontAttributeName];
     [result setAttributes:attrs range:NSMakeRange(0, [text rangeOfString:@"\n"].location)];
-    return result autorelease;
+    return result;
 }
 
 - (NSAttributedString *)_timestampForTime:(QTTime)qttime

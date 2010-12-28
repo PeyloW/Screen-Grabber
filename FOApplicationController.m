@@ -46,9 +46,8 @@
         NSArray *originalURLs = [panel URLs];
         NSMutableArray *urls = [NSMutableArray arrayWithCapacity:[originalURLs count]];
         NSFileManager *manager = [NSFileManager defaultManager];
-        NSEnumerator *urlsEnum = [originalURLs objectEnumerator];
         NSURL *url = nil;
-        while (url = [urlsEnum nextObject]) {
+        for (url in originalURLs) {
             BOOL isDir = NO;
             if ([manager fileExistsAtPath:[url path] isDirectory:&isDir]) {
                 if (isDir) {
