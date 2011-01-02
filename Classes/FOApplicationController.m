@@ -95,6 +95,7 @@
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 @end
