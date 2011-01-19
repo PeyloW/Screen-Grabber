@@ -83,6 +83,15 @@
     [self didChangeValueForKey:@"delegate"];
 }
 
+- (QTMovie *)previewMovie
+{
+	if (_previewMovie == nil) {
+    	_previewMovie = [[self movie] copy];
+    }
+    return _previewMovie;
+}
+
+
 - (QTMovie *)movie
 {
     return _movie;
@@ -91,7 +100,9 @@
 - (void)setMovie:(QTMovie *)movie
 {
     [self willChangeValueForKey:@"movie"];
+    [self willChangeValueForKey:@"previewMovie"];
     _movie = movie;
+    [self didChangeValueForKey:@"previewMovie"];
     [self didChangeValueForKey:@"movie"];
 }
 
@@ -419,6 +430,7 @@
     for (y = 0; y < (int)_gridSize.height; y++) {
         for (x = 0; x < (int)_gridSize.width; x++) {
             [_movie setCurrentTime:captureTime];
+            [_previewMovie setCurrentTime:captureTime];
             
             [self _setPercentDone:((x + y * _gridSize.width) / (_gridSize.width * _gridSize.height)) * 100.0];
             YIELD(inThread);

@@ -24,6 +24,7 @@
 @private
     id _delegate;
     QTMovie *_movie;
+    QTMovie *_previewMovie;
     NSImage *_image;
     NSSize _gridSize;
     float _imageWidth;
@@ -43,6 +44,9 @@
 - (id)delegate;
 // Set the recievers delegate.
 - (void)setDelegate:(id)delegate;
+
+// The preview window for display
+- (QTMovie *)previewMovie;
 
 // Returns the movie object assiciated with the reciever.
 - (QTMovie *)movie;
