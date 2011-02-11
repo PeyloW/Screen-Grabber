@@ -62,6 +62,8 @@
          AttachMovieToCurrentThread([movie quickTimeMovie]);
          }*/
         QTMovie *movie = [QTMovie movieWithURL:url error:error];
+        [movie setAttribute:QTMovieApertureModeClean
+                     forKey:QTMovieApertureModeAttribute];
         if (movie) {
             [self setMovie:movie];
         } else {
@@ -409,7 +411,11 @@
     QTTime timeIncrement = moviewLength;
     timeIncrement.timeValue /= _gridSize.width * _gridSize.height;
     QTTime captureTime = timeIncrement;
-    captureTime.timeValue /= 2;
+    if (_gridSize.width == 1 && _gridSize.height == 1) {
+	    captureTime.timeValue /= 8;
+    } else {
+	    captureTime.timeValue /= 2;
+    }
     
     [self _setPercentDone:0.0];
     YIELD(inThread);

@@ -149,6 +149,31 @@ dWR0YQAAAAA</bytes>
 												<bool key="EncodedWithXMLCoder">YES</bool>
 												<object class="NSMenuItem" id="700989701">
 													<reference key="NSMenu" ref="264644007"/>
+													<string key="NSTitle">1x1</string>
+													<string key="NSKeyEquiv"/>
+													<int key="NSKeyEquivModMask">1048576</int>
+													<int key="NSMnemonicLoc">2147483647</int>
+													<reference key="NSOnImage" ref="634906986"/>
+													<reference key="NSMixedImage" ref="165307277"/>
+													<string key="NSAction">_popUpItemAction:</string>
+													<int key="NSTag">257</int>
+													<reference key="NSTarget" ref="328491174"/>
+												</object>
+												<object class="NSMenuItem" id="418748625">
+													<reference key="NSMenu" ref="264644007"/>
+													<bool key="NSIsDisabled">YES</bool>
+													<bool key="NSIsSeparator">YES</bool>
+													<string key="NSTitle"/>
+													<string key="NSKeyEquiv"/>
+													<int key="NSKeyEquivModMask">1048576</int>
+													<int key="NSMnemonicLoc">2147483647</int>
+													<reference key="NSOnImage" ref="634906986"/>
+													<reference key="NSMixedImage" ref="165307277"/>
+													<string key="NSAction">_popUpItemAction:</string>
+													<reference key="NSTarget" ref="328491174"/>
+												</object>
+												<object class="NSMenuItem" id="916567701">
+													<reference key="NSMenu" ref="264644007"/>
 													<string key="NSTitle">2x2</string>
 													<string key="NSKeyEquiv"/>
 													<int key="NSKeyEquivModMask">1048576</int>
@@ -227,7 +252,6 @@ dWR0YQAAAAA</bytes>
 													<string key="NSKeyEquiv"/>
 													<int key="NSKeyEquivModMask">1048576</int>
 													<int key="NSMnemonicLoc">2147483647</int>
-													<int key="NSState">1</int>
 													<reference key="NSOnImage" ref="634906986"/>
 													<reference key="NSMixedImage" ref="165307277"/>
 													<string key="NSAction">_popUpItemAction:</string>
@@ -310,7 +334,7 @@ dWR0YQAAAAA</bytes>
 												</object>
 											</object>
 										</object>
-										<int key="NSSelectedIndex">2</int>
+										<int key="NSSelectedIndex">4</int>
 										<int key="NSPreferredEdge">3</int>
 										<bool key="NSUsesItemFromMenu">YES</bool>
 										<bool key="NSAltersState">YES</bool>
@@ -979,6 +1003,8 @@ dWR0YQAAAAA</bytes>
 							<reference ref="613221338"/>
 							<reference ref="673814409"/>
 							<reference ref="1025478331"/>
+							<reference ref="916567701"/>
+							<reference ref="418748625"/>
 						</object>
 						<reference key="parent" ref="328491174"/>
 					</object>
@@ -1108,6 +1134,16 @@ dWR0YQAAAAA</bytes>
 						<reference key="object" ref="1025478331"/>
 						<reference key="parent" ref="264644007"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">139</int>
+						<reference key="object" ref="916567701"/>
+						<reference key="parent" ref="264644007"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">140</int>
+						<reference key="object" ref="418748625"/>
+						<reference key="parent" ref="264644007"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1126,6 +1162,10 @@ dWR0YQAAAAA</bytes>
 					<string>135.ImportedFromIB2</string>
 					<string>136.IBPluginDependency</string>
 					<string>136.ImportedFromIB2</string>
+					<string>139.IBPluginDependency</string>
+					<string>139.ImportedFromIB2</string>
+					<string>140.IBPluginDependency</string>
+					<string>140.ImportedFromIB2</string>
 					<string>21.IBPluginDependency</string>
 					<string>21.ImportedFromIB2</string>
 					<string>22.IBPluginDependency</string>
@@ -1211,6 +1251,10 @@ dWR0YQAAAAA</bytes>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<boolean value="YES"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<boolean value="YES"/>
 					<string>com.apple.QTKitIBPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1222,7 +1266,7 @@ dWR0YQAAAAA</bytes>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{210, 231}, {88, 227}}</string>
+					<string>{{359, 130}, {88, 254}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1256,7 +1300,7 @@ dWR0YQAAAAA</bytes>
 						<bytes key="NSTransformStruct">P4AAAL+AAABCkAAAwaAAAA</bytes>
 					</object>
 					<boolean value="YES"/>
-					<string>{{81, 336}, {88, 122}}</string>
+					<string>{{230, 262}, {88, 122}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1267,9 +1311,9 @@ dWR0YQAAAAA</bytes>
 					<boolean value="YES"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<boolean value="YES"/>
-					<string>{{42, 132}, {507, 413}}</string>
+					<string>{{149, 358}, {507, 413}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{42, 132}, {507, 413}}</string>
+					<string>{{149, 358}, {507, 413}}</string>
 					<boolean value="YES"/>
 					<boolean value="YES"/>
 					<string>{480, 150}</string>
@@ -1303,7 +1347,7 @@ dWR0YQAAAAA</bytes>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">138</int>
+			<int key="maxID">140</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
