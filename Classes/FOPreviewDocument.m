@@ -131,4 +131,27 @@
     [alert runModal];
 }
 
+- (NSInteger)numberOfItemsInComboBox:(NSComboBox *)aComboBox;
+{
+    if ([aComboBox tag] == 1) {
+		return 13;
+    } else if ([aComboBox tag] == 2) {
+    	return 12;
+	}
+	return 0;
+}
+
+-(id)comboBox:(NSComboBox *)aComboBox objectValueForItemAtIndex:(NSInteger)index;
+{
+    if ([aComboBox tag] == 1) {
+        static int widths[13] = (int[]){320, 480, 640, 800, 960, 1024, 1280, 1440, 1600, 1920, 2048, 2560, 4096 };
+        return [NSNumber numberWithFloat:widths[index]];
+    }
+    if ([aComboBox tag] == 2) {
+        static int widths[12] = (int[]){1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 24, 32 };
+        return [NSNumber numberWithFloat:widths[index]];
+    }
+    return nil;
+}
+
 @end

@@ -20,7 +20,7 @@
 
 #import "FOBatchScreenGrabber.h"
 
-@interface FOApplicationController : NSObject
+@interface FOApplicationController : NSObject <NSComboBoxDataSource>
 {
 @private
     NSPanel *batchProcessingPanel;

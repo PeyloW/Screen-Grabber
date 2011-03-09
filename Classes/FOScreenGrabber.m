@@ -41,7 +41,7 @@
 
 - (id)initWithURL:(NSURL *)url error:(NSError **)error
 {
-    NSSize size = NSMakeSize((int)[FOPrefs gridSize] / 256, (int)[FOPrefs gridSize] % 256);
+    NSSize size = NSMakeSize((int)[FOPrefs gridCols], (int)[FOPrefs gridRows]);
     float width = [FOPrefs imageWidth];
     return [self initWithURL:url gridSize:size imageWidth:width error:error];
 }
@@ -147,15 +147,27 @@
     [self didChangeValueForKey:@"gridSize"];
 }
 
-- (unsigned)flatGridSize
+-(int)gridCols;
 {
-    NSSize size = [self gridSize];
-    return (unsigned)(size.width * 256) + (unsigned)size.height;  
+	return [self gridSize].width;
 }
 
-- (void)setFlatGridSize:(unsigned)flatGridSize
+-(void)setGridCols:(int)v
 {
-    NSSize size = NSMakeSize(flatGridSize / 256, flatGridSize % 256);
+	NSSize size = [self gridSize];
+    size.width = v;
+    [self setGridSize:size];
+}
+
+-(int)gridRows;
+{
+	return [self gridSize].height;
+}
+
+-(void)setGridRows:(int)v
+{
+	NSSize size = [self gridSize];
+    size.height = v;
     [self setGridSize:size];
 }
 
@@ -474,8 +486,8 @@
             captureTime = QTTimeIncrement(captureTime, timeIncrement);
         }
     }
-    NSPoint markPos = NSMakePoint(targetSize.width - 310.0, targetSize.height - 10.0 - 32.0);
-    [[self _waterMark] drawAtPoint:markPos];
+    //NSPoint markPos = NSMakePoint(targetSize.width - 310.0, targetSize.height - 10.0 - 32.0);
+    //[[self _waterMark] drawAtPoint:markPos];
     [_image unlockFocus];
     
     [self _setProcessing:NO];

@@ -27,11 +27,13 @@
 + (FOScreenGrabberPrefs *)standardPrefs;
 
 - (float)imageWidth;
-- (float)gridSize;
+- (float)gridCols;
+- (float)gridRows;
 - (NSString *)imageType;
 - (BOOL)addMovieInfo;
 - (BOOL)addTimestamp;
 - (BOOL)addBorder;
+- (BOOL)addWatermark;
 - (float)borderWidth;
 - (NSColor *)backgroundColor;
 - (NSColor *)fontColor;

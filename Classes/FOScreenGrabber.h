@@ -75,12 +75,11 @@
 // This does not change the user default.
 - (void)setGridSize:(NSSize)gridSize;
 
-// Returns the recievers images grid size as an ineteger value.
-// The grid size is x * 256 + y, and suitable for UI tags.
-- (unsigned)flatGridSize;
+-(int)gridCols;
+-(void)setGridCols:(int)v;
 
-// Sets the recievers image grid size.
-- (void)setFlatGridSize:(unsigned)flatGridSize;
+-(int)gridRows;
+-(void)setGridRows:(int)v;
 
 // Returns the recievers image width.
 - (float)imageWidth;

@@ -20,7 +20,7 @@
 #import <Cocoa/Cocoa.h>
 #import "FOScreenGrabber.h"
 
-@interface FOPreviewDocument : NSDocument
+@interface FOPreviewDocument : NSDocument <NSComboBoxDataSource>
 {
 @protected
     NSWindow *mainWindow;

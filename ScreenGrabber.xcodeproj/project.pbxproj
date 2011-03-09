@@ -41,18 +41,6 @@
 		A61370770A92424E008B0900 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
 		A6A8A6490A8DF0EA00B0C980 /* FOApplicationController.h */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.h; name = FOApplicationController.h; path = Classes/FOApplicationController.h; sourceTree = "<group>"; };
 		A6A8A64A0A8DF0EB00B0C980 /* FOApplicationController.m */ = {isa = PBXFileReference; fileEncoding = 5; lastKnownFileType = sourcecode.c.objc; name = FOApplicationController.m; path = Classes/FOApplicationController.m; sourceTree = "<group>"; };
-		A6B406A80A94E0A300E1E5F9 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Japanese; path = Resources/Japanese.lproj/Credits.rtf; sourceTree = "<group>"; };
-		A6B406A90A94E0AC00E1E5F9 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = French; path = Resources/French.lproj/Credits.rtf; sourceTree = "<group>"; };
-		A6B406AA0A94E0B100E1E5F9 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Swedish; path = Resources/Swedish.lproj/Credits.rtf; sourceTree = "<group>"; };
-		A6B406AD0A94E0C400E1E5F9 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		A6B406AE0A94E0CD00E1E5F9 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		A6B406AF0A94E0D100E1E5F9 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		A6B406B20A94E0DF00E1E5F9 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/PreviewDocument.nib; sourceTree = "<group>"; };
-		A6B406B30A94E0E300E1E5F9 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/PreviewDocument.nib; sourceTree = "<group>"; };
-		A6B406B40A94E0E700E1E5F9 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/PreviewDocument.nib; sourceTree = "<group>"; };
-		A6B4075D0A970BE400E1E5F9 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = zh_TW; path = Resources/zh_TW.lproj/Credits.rtf; sourceTree = "<group>"; };
-		A6B407600A970BF000E1E5F9 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/MainMenu.nib; sourceTree = "<group>"; };
-		A6B407640A970C0600E1E5F9 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/PreviewDocument.nib; sourceTree = "<group>"; };
 		A6CD99670A84976C00F40EDE /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		A6CD999F0A849DA700F40EDE /* FOScreenGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FOScreenGrabber.h; path = Classes/FOScreenGrabber.h; sourceTree = "<group>"; };
 		A6CD99A00A849DA700F40EDE /* FOScreenGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FOScreenGrabber.m; path = Classes/FOScreenGrabber.m; sourceTree = "<group>"; };
@@ -252,10 +240,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				2A37F4B5FDCFA73011CA2CEA /* English */,
-				A6B406B20A94E0DF00E1E5F9 /* Swedish */,
-				A6B406B30A94E0E300E1E5F9 /* Japanese */,
-				A6B406B40A94E0E700E1E5F9 /* French */,
-				A6B407640A970C0600E1E5F9 /* zh_TW */,
 			);
 			name = PreviewDocument.nib;
 			sourceTree = "<group>";
@@ -264,10 +248,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				2A37F4B7FDCFA73011CA2CEA /* English */,
-				A6B406AD0A94E0C400E1E5F9 /* Swedish */,
-				A6B406AE0A94E0CD00E1E5F9 /* Japanese */,
-				A6B406AF0A94E0D100E1E5F9 /* French */,
-				A6B407600A970BF000E1E5F9 /* zh_TW */,
 			);
 			name = MainMenu.nib;
 			sourceTree = "<group>";
@@ -276,10 +256,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				2A37F4BAFDCFA73011CA2CEA /* English */,
-				A6B406A80A94E0A300E1E5F9 /* Japanese */,
-				A6B406A90A94E0AC00E1E5F9 /* French */,
-				A6B406AA0A94E0B100E1E5F9 /* Swedish */,
-				A6B4075D0A970BE400E1E5F9 /* zh_TW */,
 			);
 			name = Credits.rtf;
 			sourceTree = "<group>";

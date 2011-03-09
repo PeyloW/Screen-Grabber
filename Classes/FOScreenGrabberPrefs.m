@@ -47,9 +47,14 @@
     return [[self userDefaults] floatForKey:@"imageWidth"];
 }
 
-- (float)gridSize
+- (float)gridCols;
 {
-    return [[self userDefaults] floatForKey:@"gridSize"];
+    return [[self userDefaults] floatForKey:@"gridCols"];
+}
+
+- (float)gridRows;
+{
+    return [[self userDefaults] floatForKey:@"gridRows"];    
 }
 
 - (NSString *)imageType
@@ -70,6 +75,11 @@
 - (BOOL)addBorder;
 {
     return [[self userDefaults] boolForKey:@"addBorder"];
+}
+
+- (BOOL)addWatermark;
+{
+	return [[self userDefaults] boolForKey:@"addWatermark"];
 }
 
 - (float)borderWidth;
@@ -97,7 +107,8 @@
     [FOScreenGrabberPrefs standardPrefs];
     NSMutableDictionary *values = [NSMutableDictionary dictionaryWithCapacity:8];
     [values setObject:[NSNumber numberWithFloat:480.0] forKey:@"imageWidth"];
-    [values setObject:[NSNumber numberWithFloat:520.0] forKey:@"gridSize"];
+    [values setObject:[NSNumber numberWithFloat:3] forKey:@"gridCols"];
+    [values setObject:[NSNumber numberWithFloat:8] forKey:@"gridRows"];
     [values setObject:@"jpeg" forKey:@"imageType"];
     [values setObject:[NSNumber numberWithBool:YES] forKey:@"addMovieInfo"];
     [values setObject:[NSNumber numberWithBool:YES] forKey:@"addTimestamp"];
