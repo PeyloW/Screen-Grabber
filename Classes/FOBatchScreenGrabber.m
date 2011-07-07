@@ -211,7 +211,7 @@
 - (void)batchScreenGrabber:(FOBatchScreenGrabber *)batchScreenGrabber didProcessURL:(NSURL *)url { return; }
 - (BOOL)batchScreenGrabber:(FOBatchScreenGrabber *)batchScreenGrabber shouldStopProcessingWithError:(NSError *)error
 {
-    NSLog(@"%@: %@", [batchScreenGrabber className], [error localizedDescription], nil);
+    NSLog(@"%@: %@", [batchScreenGrabber className], [error localizedDescription]);
     return NO;
 }
 

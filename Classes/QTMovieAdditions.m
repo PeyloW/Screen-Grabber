@@ -24,6 +24,13 @@
 
 @end
 
+@interface QTTrack (PrivateAdditions)
+
+-(QTMedia*)foMedia;
+
+@end
+
+
 @interface QTMedia (PrivateAdditions)
 
 - (SInt64)mediaSize; 
@@ -60,9 +67,14 @@
     return tracks && ([tracks count] > 0);
 }
 
+- (NSSize)naturalSize;
+{
+    return [[self attributeForKey:QTMovieNaturalSizeAttribute] sizeValue];
+}
+
 - (NSString *)videoResolution
 {
-    NSSize size = [[[self movieAttributes] objectForKey:QTMovieNaturalSizeAttribute] sizeValue];
+    NSSize size = [self naturalSize];
     return [NSString stringWithFormat:@"%dx%d", (int)size.width, (int)size.height, nil];
 }
 
@@ -78,7 +90,7 @@
     if ([tracks count] > 0) {
 		QTTrack *track = [tracks objectAtIndex:0];
 		float seconds = [self _durationInSeconds];
-		SInt64 size = [[track media] mediaSize];
+		SInt64 size = [[track foMedia] mediaSize];
 		if (size > 0) {
 			float kbps = (size / (1024.0 / 8.0)) / seconds;
 			result = [NSString stringWithFormat:@"%.2f", kbps, nil];
@@ -101,12 +113,12 @@
             GetMediaSampleDescription([media quickTimeMedia], 1, (SampleDescriptionHandle)desc);
             OSErr err = GetMoviesError();
             if (err == noErr) {
-                result = [NSString stringWithCString:p2cstr((**desc).name)];
+                result = [NSString stringWithCString:p2cstr((**desc).name) encoding:NSASCIIStringEncoding];
                 if ([result length] == 0) {
 					CodecInfo info;
 					err = GetCodecInfo(&info, (**desc).cType, 0);
 					if (err == noErr) {
-						result = [NSString stringWithCString:p2cstr(info.typeName)];
+						result = [NSString stringWithCString:p2cstr(info.typeName) encoding:NSASCIIStringEncoding];
 					} else {
 						char *bytes = (char *)&((**desc).cType);
 						result = [NSString stringWithFormat:@"%c%c%c%c", bytes[0], bytes[1], bytes[2], bytes[3], nil];
@@ -124,16 +136,9 @@
     NSString *result = @"?";
     NSArray *tracks = [self tracksOfMediaType:QTMediaTypeSound];
     if ([tracks count] > 0) {
-        QTMedia *media = [[tracks objectAtIndex:0] media];
-        SoundDescriptionHandle desc = (SoundDescriptionHandle)NewHandleClear(sizeof(SoundDescriptionHandle));
-        if (desc) {
-            GetMediaSampleDescription([media quickTimeMedia], 1, (SampleDescriptionHandle)desc);
-            OSErr err = GetMoviesError();
-            if (err == noErr) {
-                result = [NSString stringWithFormat:@"%g", ((**desc).sampleRate >> 16) / 1000.0, nil];
-            }
-            DisposeHandle((Handle)desc);
-        }
+        QTMedia *media = [[tracks objectAtIndex:0] foMedia];
+        long scale = [[media attributeForKey:QTMediaTimeScaleAttribute] longValue];
+        result = [NSString stringWithFormat:@"%g", scale];
     }
     return result;
 }
@@ -177,6 +182,30 @@
     return result;
 }
 
+-(QTMovieLoadState)loadState;
+{
+    return [[self attributeForKey:QTMovieLoadStateAttribute] integerValue];
+}
+
+-(BOOL)waitForLoadState:(QTMovieLoadState)loadState;
+{
+    QTMovieLoadState actualLoadState = [self loadState];
+    while (actualLoadState != QTMovieLoadStateError && actualLoadState < loadState) {
+        if ([NSThread isMainThread]) {
+            [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.5]];
+        } else {
+            [NSThread sleepForTimeInterval:0.5];
+        }
+        actualLoadState = [self loadState];
+    }
+    if (actualLoadState == QTMovieLoadStateError) {
+        NSError* error = [self attributeForKey:QTMovieLoadStateErrorAttribute];
+        NSLog(@"Load state error: %@", error);
+        return NO;
+    }
+    return YES;
+}
+
 @end
 
 @implementation QTMovie (PrivateAdditions)
@@ -195,207 +224,35 @@
     return 0.0;
 }
 
+@end
 
+@implementation QTTrack (PrivateAdditions)
 
-- (NSImage *)imageAtTime:(QTTime)qttime
+-(QTMedia*)foMedia;
 {
-    TimeValue time = (TimeValue)qttime.timeValue;
-    Movie movie = [self quickTimeMovie];
-    // Pin the time to legal values.
-    TimeValue duration = GetMovieDuration(movie);
-    if (time > duration)
-        time = duration;
-    if (time < 0) time = 0;
-    
-    // Create an offscreen GWorld for the movie to draw into.
-    GWorldPtr gworld = [self gworldForMovie:movie];
-    
-    // Set the GWorld for the movie.
-    GDHandle oldDevice;
-    CGrafPtr oldPort;
-    GetMovieGWorld(movie,&oldPort,&oldDevice);
-    SetMovieGWorld(movie,gworld,GetGWorldDevice(gworld));
-    
-    // Advance the movie to the appropriate time value.
-    SetMovieTimeValue(movie,time);
-    
-    // Draw the movie.
-    UpdateMovie(movie);
-    MoviesTask(movie,0);
-    
-    // Create an NSImage from the GWorld.
-    NSImage *image = [self imageFromGWorld:gworld];
-    
-    // Restore the previous GWorld, then dispose the one we allocated.
-    SetMovieGWorld(movie,oldPort,oldDevice);
-    DisposeGWorld(gworld);
-    
-    return image;
-}
-
-
-
-// ---------------------------------------
-// gworldForMovie:
-// ---------------------------------------
-//  Get the bounding rectangle of the Movie the create a 32-bit GWorld
-//  with those dimensions.
-//  This GWorld will be used for rendering Movie frames into.
-
--(GWorldPtr) gworldForMovie:(Movie)movie
-{
-    Rect        srcRect;
-    GWorldPtr   newGWorld = NULL;
-    CGrafPtr    savedPort;
-    GDHandle    savedDevice;
-    
-    OSErr err = noErr;
-    GetGWorld(&savedPort, &savedDevice);
-    
-    GetMovieBox(movie,&srcRect);
-    
-    err = NewGWorld(&newGWorld,
-                    k32ARGBPixelFormat,
-                    &srcRect,
-                    NULL,
-                    NULL,
-                    0);
-    if (err == noErr)
-    {
-        if (LockPixels(GetGWorldPixMap(newGWorld)))
-        {
-            Rect        portRect;
-            RGBColor    theBlackColor   = { 0, 0, 0 };
-            RGBColor    theWhiteColor   = { 65535, 65535, 65535 };
-            
-            SetGWorld(newGWorld, NULL);
-            GetPortBounds(newGWorld, &portRect);
-            RGBBackColor(&theBlackColor);
-            RGBForeColor(&theWhiteColor);
-            EraseRect(&portRect);
-            
-            UnlockPixels(GetGWorldPixMap(newGWorld));
-        }
-    }
-    
-    SetGWorld(savedPort, savedDevice);
-    NSAssert(newGWorld != NULL, @"NULL gworld");
-    return newGWorld;
-}
-
-
-
--(NSImage *)imageFromGWorld:(GWorldPtr) gWorldPtr
-{
-    PixMapHandle        pixMapHandle = NULL;
-    Ptr                 pixBaseAddr = nil;
-    NSBitmapImageRep    *imageRep = nil;
-    NSImage             *image = nil;
-    
-    NSAssert(gWorldPtr != nil, @"nil gWorldPtr");
-    
-    // Lock the pixels
-    pixMapHandle = GetGWorldPixMap(gWorldPtr);
-    if (pixMapHandle)
-    {
-        Rect        portRect;
-        unsigned    portWidth, portHeight;
-        int         bitsPerSample, samplesPerPixel;
-        BOOL        hasAlpha, isPlanar;
-        int         destRowBytes;
-        
-        NSAssert(LockPixels(pixMapHandle) != false, @"LockPixels returns false");
-        
-        GetPortBounds(gWorldPtr, &portRect);
-        portWidth = (portRect.right - portRect.left);
-        portHeight = (portRect.bottom - portRect.top);
-        
-        bitsPerSample   = 8;
-        samplesPerPixel = 4;
-        hasAlpha        = YES;
-        isPlanar        = NO;
-        destRowBytes    = portWidth * samplesPerPixel;
-        imageRep        = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:NULL 
-                                                                  pixelsWide:portWidth 
-                                                                  pixelsHigh:portHeight 
-                                                               bitsPerSample:bitsPerSample 
-                                                             samplesPerPixel:samplesPerPixel 
-                                                                    hasAlpha:hasAlpha 
-                                                                    isPlanar:NO
-                                                              colorSpaceName:NSDeviceRGBColorSpace 
-                                                                 bytesPerRow:destRowBytes 
-                                                                bitsPerPixel:0];
-        if (imageRep)
-        {
-            char    *theData;
-            int     pixmapRowBytes;
-            int     rowByte,rowIndex;
-            
-            theData = [imageRep bitmapData];
-            
-            pixBaseAddr = GetPixBaseAddr(pixMapHandle);
-            if (pixBaseAddr)
-            {
-                pixmapRowBytes = GetPixRowBytes(pixMapHandle);
-                
-                for (rowIndex=0; rowIndex< portHeight; rowIndex++)
-                {
-                    unsigned char *dst = theData + rowIndex * destRowBytes;
-                    unsigned char *src = pixBaseAddr + rowIndex * pixmapRowBytes;
-                    unsigned char a,r,g,b;
-                    
-                    for (rowByte = 0; rowByte < portWidth; rowByte++)
-                    {
-                        a = *src++;     // get source Alpha component
-                        r = *src++;     // get source Red component
-                        g = *src++;     // get source Green component
-                        b = *src++;     // get source Blue component  
-                        
-                        *dst++ = r;     // set dest. Alpha component
-                        *dst++ = g;     // set dest. Red component
-                        *dst++ = b;     // set dest. Green component
-                        *dst++ = a;     // set dest. Blue component  
-                    }
-                }
-                
-                image = [[NSImage alloc] initWithSize:NSMakeSize(portWidth, portHeight)];
-                if (image)
-                {
-                    [image addRepresentation:imageRep];
-                }
+    QTMedia* media = [self media];
+    if (media == nil) {
+        NSString* desc = [self description];
+        NSRange range = [desc rangeOfString:@"QTMedia =" options:NSBackwardsSearch];
+        if (range.location != NSNotFound) {
+            desc = [desc substringFromIndex:range.location+range.length];
+            unsigned long long pointer = 0;
+            if ([[NSScanner scannerWithString:desc] scanHexLongLong:&pointer]) {
+                media = (id)pointer;
             }
         }
     }
-    
-    NSAssert(pixMapHandle != NULL, @"null pixMapHandle");
-    NSAssert(imageRep != nil, @"nil imageRep");
-    NSAssert(pixBaseAddr != nil, @"nil pixBaseAddr");
-    NSAssert(image != nil, @"nil image");
-    
-    if (pixMapHandle)
-    {
-        UnlockPixels(pixMapHandle);
-    }
-    
-    return image;
+    return media;
 }
 
-
 @end
+
 
 @implementation QTMedia (PrivateAdditions)
 
 - (SInt64)mediaSize
 {
-	Media media = [self quickTimeMedia];
-	SInt64 size;
-	TimeValue64 start = GetMediaDisplayStartTime(media);
-	TimeValue64 duration = GetMediaDisplayDuration(media);
-	OSErr err = GetMediaDataSizeTime64(media, start, duration, &size);
-	if (err == noErr) {
-		return size;
-	}
-	return 0;
+    return [[self attributeForKey:QTMediaSampleCountAttribute] longLongValue];
 }
 
 @end

@@ -21,8 +21,6 @@
 
 @interface FOPreviewDocument (Private)
 
-- (void)savePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
-
 - (NSString *)windowNibName;
 - (void)windowControllerDidLoadNib:(NSWindowController *)windowController;
 
@@ -59,9 +57,16 @@
     [panel setCanSelectHiddenExtension:YES];
     NSString *dir = [[[_screenGrabber imageURL] path] stringByDeletingLastPathComponent];
     NSString *name = [[[_screenGrabber imageURL] path] lastPathComponent];
-    [panel beginSheetForDirectory:dir file:name modalForWindow:mainWindow modalDelegate:self didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+    [panel setDirectoryURL:[NSURL fileURLWithPath:dir isDirectory:YES]];
+    [panel setNameFieldStringValue:name];
+    [panel beginSheetModalForWindow:mainWindow completionHandler:^(NSInteger result) {
+        [panel orderOut:self];
+        if (result == NSOKButton) {
+            [_screenGrabber setImageURL:[panel URL]];
+            [_screenGrabber captureImages:self];
+        }
+    }];
 }
-
 
 @end
 
@@ -69,24 +74,26 @@
 
 @implementation FOPreviewDocument (Private)
 
-- (void)savePanelDidEnd:(NSSavePanel *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-    [sheet orderOut:self];
-    if (returnCode == NSOKButton) {
-        [_screenGrabber setImageURL:[sheet URL]];
-        [_screenGrabber captureImages:self];
-    }
-}
-
-
 - (NSString *)windowNibName
 {
     return @"PreviewDocument";
 }
 
+- (NSSize)windowWillResize:(NSWindow *)window toSize:(NSSize)frameSize;
+{
+    NSSize size = [[[self screenGrabber] movie] naturalSize];
+    frameSize.height = (int)(frameSize.width * (size.height / size.width));
+    frameSize.height += 66;
+    NSLog(@"Window size: %@", NSStringFromSize(frameSize));
+    return frameSize;
+}
+
 - (void)windowControllerDidLoadNib:(NSWindowController *)windowController
 {
     [progressIndicator setUsesThreadedAnimation:YES];
+    NSRect frame = [mainWindow frame];
+    frame.size = [self windowWillResize:mainWindow toSize:frame.size];
+    [mainWindow setFrame:frame display:YES];
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)error
@@ -128,7 +135,9 @@
 - (void)screenGrabber:(FOScreenGrabber *)screenGrabber error:(NSError *)error
 { 
     NSAlert *alert = [NSAlert alertWithError:error];
-    [alert runModal];
+    [NSApp endSheet:progressSheet];
+    [progressSheet orderOut:self];
+    [alert beginSheetModalForWindow:mainWindow modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
 }
 
 - (NSInteger)numberOfItemsInComboBox:(NSComboBox *)aComboBox;

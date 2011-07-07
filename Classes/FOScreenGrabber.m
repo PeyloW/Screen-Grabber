@@ -19,21 +19,22 @@
 #import "FOScreenGrabber.h"
 
 #import "FOScreenGrabberPrefs.h"
-#import "QTMovieAdditions.h"
+
+static void dispatch_sync_on_main_queue(dispatch_block_t b) {
+    if ([NSThread isMainThread]) 
+        b(); 
+    else 
+        dispatch_sync(dispatch_get_main_queue(), b);
+}
 
 @interface FOScreenGrabber (Private)
-
-- (void)_createMovie:(NSMutableArray *)args;
 
 - (void)_setImage:(NSImage *)image;
 
 - (void)_setProcessing:(BOOL)processing;
 - (void)_setPercentDone:(float)percentDone;
 
-- (void)_yieldToNumberOfEvents:(uint)count;
-
-// Sort of special, nil if not in thread
-- (void)_captureImagesInThread:(NSObject *)inThread;
+- (void)_captureImagesInBackground;
 
 @end
 
@@ -49,28 +50,24 @@
 
 - (id)initWithURL:(NSURL *)url gridSize:(NSSize)gridSize imageWidth:(float)imageWidth error:(NSError **)error;
 {
-    self = [super init];
-    if (self) {
-        [self setGridSize:gridSize];
-        [self setImageWidth:imageWidth];
-        NSMutableArray *args = [NSMutableArray arrayWithObjects:url, [NSValue valueWithPointer:error], nil];
-        [self performSelectorOnMainThread:@selector(_createMovie:) withObject:args waitUntilDone:YES];
-        error = (NSError **)[[args objectAtIndex:1] pointerValue];
-        /*QTMovie *movie = nil;
-         if ([args count] == 3) {
-         movie = [args objectAtIndex:2];
-         AttachMovieToCurrentThread([movie quickTimeMovie]);
-         }*/
-        QTMovie *movie = [QTMovie movieWithURL:url error:error];
-        [movie setAttribute:QTMovieApertureModeClean
-                     forKey:QTMovieApertureModeAttribute];
-        if (movie) {
-            [self setMovie:movie];
-        } else {
-            self = nil;
-        }
+    __block FOScreenGrabber* result = [super init];
+    if (result) {
+        dispatch_sync_on_main_queue(^(void) {
+            [result setGridSize:gridSize];
+            [result setImageWidth:imageWidth];
+            NSDictionary* attr = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  url, QTMovieURLAttribute,
+                                  [NSNumber numberWithBool:YES], QTMovieOpenForPlaybackAttribute,
+                                  QTMovieApertureModeClean, QTMovieApertureModeAttribute, nil];
+            QTMovie *movie = [QTMovie movieWithAttributes:attr error:error];
+            if ([movie waitForLoadState:QTMovieLoadStateLoaded]) {
+                [result setMovie:movie];
+            } else {
+                result = nil;
+            }
+        });
     }
-    return self;
+    return result;
 }
 
 - (id)delegate
@@ -88,7 +85,7 @@
 - (QTMovie *)previewMovie
 {
 	if (_previewMovie == nil) {
-    	_previewMovie = [[self movie] copy];
+    	_previewMovie = [self movie]; //[[self movie] copy];
     }
     return _previewMovie;
 }
@@ -101,11 +98,13 @@
 
 - (void)setMovie:(QTMovie *)movie
 {
-    [self willChangeValueForKey:@"movie"];
-    [self willChangeValueForKey:@"previewMovie"];
-    _movie = movie;
-    [self didChangeValueForKey:@"previewMovie"];
-    [self didChangeValueForKey:@"movie"];
+    dispatch_sync_on_main_queue(^(void) {
+        [self willChangeValueForKey:@"movie"];
+        [self willChangeValueForKey:@"previewMovie"];
+        _movie = movie;
+        [self didChangeValueForKey:@"previewMovie"];
+        [self didChangeValueForKey:@"movie"];
+    });
 }
 
 - (NSImage *)image
@@ -115,7 +114,11 @@
 
 - (NSURL *)movieURL
 {
-    return [_movie attributeForKey:QTMovieURLAttribute];
+    __block NSURL* result = nil;
+    dispatch_sync_on_main_queue(^(void) {    
+        result = [_movie attributeForKey:QTMovieURLAttribute];
+    });
+    return result;
 }
 
 - (NSURL *)imageURL
@@ -190,7 +193,7 @@
 
 - (float)percentDone
 {
-    if (_percentDone) {
+    if (_percentDone <= 0.0) {
         return 0.0;
     } else {
         return _percentDone;
@@ -206,12 +209,12 @@
 
 - (IBAction)captureImages:(id)sender
 {
-    [self _captureImagesInThread:nil];
+    [self performSelectorInBackground:@selector(_captureImagesInBackground) withObject:nil];
 }
 
 - (IBAction)captureImagesInThread:(id)sender
 {
-    [NSThread detachNewThreadSelector:@selector(_captureImagesInThread:) toTarget:self withObject:self];
+    [self performSelectorInBackground:@selector(_captureImagesInBackground) withObject:nil];
 }
 
 - (IBAction)saveImage:(id)sender
@@ -248,128 +251,90 @@
 
 @implementation FOScreenGrabber (Private)
 
-- (void)_createMovie:(NSMutableArray *)args
-{
-    NSURL *url = [args objectAtIndex:0];
-    NSError **error = (NSError **)[[args objectAtIndex:1] pointerValue];
-    QTMovie *movie = [QTMovie movieWithURL:url error:error];
-    if (movie) {
-        //DetachMovieFromCurrentThread([movie quickTimeMovie]);
-        [args addObject:movie];
-    }
-    [args replaceObjectAtIndex:1 withObject:[NSValue valueWithPointer:error]];
-}
-
-
 - (void)_setImage:(NSImage *)image
 {
-    [self willChangeValueForKey:@"image"];
-    if (_image != image) {
-        _image = image;
-    }
-    [self didChangeValueForKey:@"image"];
-    if ([self isProcessing]) {
-        [_delegate screenGrabber:self processingPartialImage:_image];
-    }
+    dispatch_sync_on_main_queue(^(void) {
+        [self willChangeValueForKey:@"image"];
+        if (_image != image) {
+            _image = image;
+        }
+        [self didChangeValueForKey:@"image"];
+        if ([self isProcessing]) {
+            [_delegate screenGrabber:self processingPartialImage:_image];
+        }
+    });
 }
 
 - (void)_setProcessing:(BOOL)processing
 {
-    [self willChangeValueForKey:@"processing"];
-    if (_isProcessing != processing) {
-        [self willChangeValueForKey:@"isIndeterminate"];
-        _percentDone = -1.0;
-        [self didChangeValueForKey:@"isIndeterminate"];
-    }
-    _isProcessing = processing;
-    [self didChangeValueForKey:@"processing"];
+    dispatch_sync_on_main_queue(^(void) {
+        [self willChangeValueForKey:@"processing"];
+        if (_isProcessing != processing) {
+            [self willChangeValueForKey:@"isIndeterminate"];
+            _percentDone = -1.0;
+            [self didChangeValueForKey:@"isIndeterminate"];
+        }
+        _isProcessing = processing;
+        [self didChangeValueForKey:@"processing"];
+    });
 }
 
 - (void)_setPercentDone:(float)percentDone
 {
-    [self willChangeValueForKey:@"percentDone"];
-    if (_percentDone == -1.0) {
-        [self willChangeValueForKey:@"isIndeterminate"];
-        _percentDone = percentDone;
-        [self didChangeValueForKey:@"isIndeterminate"];
-    } else {
-        _percentDone = percentDone;
-    }
-    [self didChangeValueForKey:@"percentDone"];
-    if ([self isProcessing]) {
-        [_delegate screenGrabber:self processingPercentDone:percentDone];
-    }
+    dispatch_sync_on_main_queue(^(void) {
+        [self willChangeValueForKey:@"percentDone"];
+        if (_percentDone == -1.0) {
+            [self willChangeValueForKey:@"isIndeterminate"];
+            _percentDone = percentDone;
+            [self didChangeValueForKey:@"isIndeterminate"];
+        } else {
+            _percentDone = percentDone;
+        }
+        [self didChangeValueForKey:@"percentDone"];
+        if ([self isProcessing]) {
+            [_delegate screenGrabber:self processingPercentDone:percentDone];
+        }
+    });
 }
-
-// Yield to a number of events (if pending).
-- (void)_yieldToNumberOfEvents:(uint)count
-{
-    uint i;
-    NSDate *until = nil;
-    for (i = 0; i < count; i++) {
-        until = [NSDate dateWithTimeIntervalSinceNow:0.01];
-        [[NSRunLoop currentRunLoop] runUntilDate:until];
-    }
-    NSEvent *event;
-    until = [NSDate dateWithTimeIntervalSinceNow:0.01];
-    while (event = [NSApp nextEventMatchingMask:NSAnyEventMask untilDate:until inMode:NSEventTrackingRunLoopMode dequeue:YES]) {
-        [NSApp sendEvent:event];
-    }
-}
-
-- (NSAttributedString *)_waterMark
-{
-    NSString *text = @"ScreenGrabber 2.1";
-    NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
-    NSFont *font = [NSFont fontWithName:@"Lucida Grande Bold" size:32.0];
-    [attrs setObject:font forKey:NSFontAttributeName];
-    [attrs setObject:[NSColor colorWithDeviceWhite:0.0 alpha:0.15] forKey:NSForegroundColorAttributeName];
-    [attrs setObject:[NSNumber numberWithFloat:-7.0] forKey:NSStrokeWidthAttributeName];
-    [attrs setObject:[NSColor colorWithDeviceWhite:1.0 alpha:0.15] forKey:NSStrokeColorAttributeName];
-    NSShadow *shadow = [[NSShadow alloc] init];
-    [shadow setShadowOffset:NSMakeSize(3.0, -6.0)];
-    [shadow setShadowBlurRadius:3.0];
-    [shadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:0.25]];
-    [attrs setObject:shadow forKey:NSShadowAttributeName];
-    return [[NSAttributedString alloc] initWithString:text attributes:attrs];
-}
-
 
 - (NSAttributedString *)_infoForMovie:(QTMovie *)movie
 {
-    NSString *name = [movie movieName];
-    NSString *length = [movie movieDuration];
-    NSString *video = @"\tVideo:\t";
-    NSString *audio = @"\tAudio:\t";
-    if ([movie haveVideoTrack] || [movie haveMPEGTrack]) {
-        NSString *videoSize = [movie videoResolution];
-        NSString *videoKbps = [movie videoKbps];
-        NSString *videoCodec = [movie videoCodec];
-        video = [video stringByAppendingFormat:@"%@pixels, %@kbit/s, %@", videoSize, videoKbps, videoCodec, nil];
-    }
-    if ([movie haveAudioTrack]) {
-        NSString *audioHz = [movie audioFrequenzy];
-        NSString *audioKbps = [movie audioKbps];
-        NSString *audioCodec = [movie audioCodec];
-        audio = [audio stringByAppendingFormat:@"%@kHz, %@kbit/s, %@", audioHz, audioKbps, audioCodec, nil];
-    } else if ([movie haveMPEGTrack]) {
-        audio = [audio stringByAppendingFormat:@"%@?", [movie videoCodec], nil];
-    }
-    NSString *text = [NSString stringWithFormat:@"%@ (%@)\n%@\n%@", name, length, video, audio, nil];
-    
-    NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
-    NSFont *font = [NSFont fontWithName:@"Lucida Grande Bold" size:12.0];
-    [attrs setObject:font forKey:NSFontAttributeName];
-    [attrs setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
-    NSShadow *shadow = [[NSShadow alloc] init];
-    [shadow setShadowOffset:NSMakeSize(1.0, -2.0)];
-    [shadow setShadowBlurRadius:1.25];
-    [shadow setShadowColor:[NSColor blackColor]];
-    [attrs setObject:shadow forKey:NSShadowAttributeName];
-    NSMutableAttributedString *result = [[NSMutableAttributedString alloc] initWithString:text attributes:attrs];
-    font = [NSFont fontWithName:@"Lucida Grande Bold" size:16.0];
-    [attrs setObject:font forKey:NSFontAttributeName];
-    [result setAttributes:attrs range:NSMakeRange(0, [text rangeOfString:@"\n"].location)];
+    __block NSMutableAttributedString *result = nil;
+    dispatch_sync_on_main_queue(^(void) {
+        NSString *name = [movie movieName];
+        NSString *length = [movie movieDuration];
+        NSString *video = @"\tVideo:\t";
+        NSString *audio = @"\tAudio:\t";
+        if ([movie haveVideoTrack] || [movie haveMPEGTrack]) {
+            NSString *videoSize = [movie videoResolution];
+            NSString *videoKbps = [movie videoKbps];
+            NSString *videoCodec = [movie videoCodec];
+            video = [video stringByAppendingFormat:@"%@pixels, %@kbit/s, %@", videoSize, videoKbps, videoCodec, nil];
+        }
+        if ([movie haveAudioTrack]) {
+            NSString *audioHz = [movie audioFrequenzy];
+            NSString *audioKbps = [movie audioKbps];
+            NSString *audioCodec = [movie audioCodec];
+            audio = [audio stringByAppendingFormat:@"%@kHz, %@kbit/s, %@", audioHz, audioKbps, audioCodec, nil];
+        } else if ([movie haveMPEGTrack]) {
+            audio = [audio stringByAppendingFormat:@"%@?", [movie videoCodec], nil];
+        }
+        NSString *text = [NSString stringWithFormat:@"%@ (%@)\n%@\n%@", name, length, video, audio, nil];
+        
+        NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
+        NSFont *font = [NSFont fontWithName:@"Lucida Grande Bold" size:12.0];
+        [attrs setObject:font forKey:NSFontAttributeName];
+        [attrs setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
+        NSShadow *shadow = [[NSShadow alloc] init];
+        [shadow setShadowOffset:NSMakeSize(1.0, -2.0)];
+        [shadow setShadowBlurRadius:1.25];
+        [shadow setShadowColor:[NSColor blackColor]];
+        [attrs setObject:shadow forKey:NSShadowAttributeName];
+        result = [[NSMutableAttributedString alloc] initWithString:text attributes:attrs];
+        font = [NSFont fontWithName:@"Lucida Grande Bold" size:16.0];
+        [attrs setObject:font forKey:NSFontAttributeName];
+        [result setAttributes:attrs range:NSMakeRange(0, [text rangeOfString:@"\n"].location)];
+    });
     return result;
 }
 
@@ -389,26 +354,40 @@
     return [[NSAttributedString alloc] initWithString:time attributes:attrs];
 }
 
-#define YIELD(x) {if (!x) { [self _yieldToNumberOfEvents:4]; } }
-// Sort of special, nil if not in thread
-// But we cannot use this with anything a UI nyway, since QTKit is not threadsafe.
-// So in order to not hang the UI we just yield to other events periodically.
-- (void)_captureImagesInThread:(NSObject *)inThread
+
+- (void)_captureImagesInBackground
 {
-    [_delegate screenGrabberWillCaptureImages:self];
-    YIELD(inThread);
+    NSError* error = nil;
+    BOOL success = YES;
+    [_delegate performSelectorOnMainThread:@selector(screenGrabberWillCaptureImages:)
+                                withObject:self 
+                             waitUntilDone:NO];
     [self _setProcessing:YES];
-    YIELD(inThread);
     
     BOOL addMovieInfo = [FOPrefs addMovieInfo];
     BOOL addTimestamp = [FOPrefs addTimestamp];
     BOOL addBorder = [FOPrefs addBorder];
     float borderWidth = [FOPrefs borderWidth];
     
-    NSSize movieSize = [[_movie currentFrameImage] size];
+    [QTMovie enterQTKitOnThreadDisablingThreadSafetyProtection];
+    success &= [_movie waitForLoadState:QTMovieLoadStatePlaythroughOK];
+    NSValue* value = [_movie attributeForKey:QTMovieNaturalSizeAttribute];
+    NSSize movieSize;
+    [value getValue:&movieSize];
+    QTTime movieLength = [_movie duration];
+    [QTMovie exitQTKitOnThread];
+    
+    if (!success) {
+        error = [NSError errorWithDomain:@"FOScreenGrabber"
+                                    code:1
+                                userInfo:[NSDictionary dictionaryWithObject:@"Could not open movie file."
+                                                                     forKey:NSLocalizedDescriptionKey]];
+        goto signalError;
+    }
+    
     NSSize smallSize;
-    smallSize.width = (_imageWidth - (_gridSize.width + 1.0) * borderWidth) / _gridSize.width;
-    smallSize.height = (movieSize.height / movieSize.width) * smallSize.width;
+    smallSize.width = (int)((_imageWidth - (_gridSize.width + 1.0) * borderWidth) / _gridSize.width);
+    smallSize.height = (int)((movieSize.height / movieSize.width) * smallSize.width);
     NSSize targetSize = NSMakeSize(_imageWidth, (smallSize.height + borderWidth) * _gridSize.height + borderWidth);
     if (addMovieInfo) {
         targetSize.height += 20.0 * 3.0;
@@ -417,10 +396,8 @@
     [self _setImage:[[NSImage alloc] initWithSize:targetSize]];
     [_image setFlipped:YES];
     [_image recache];
-    YIELD(inThread);
     
-    QTTime moviewLength = [_movie duration];
-    QTTime timeIncrement = moviewLength;
+    QTTime timeIncrement = movieLength;
     timeIncrement.timeValue /= _gridSize.width * _gridSize.height;
     QTTime captureTime = timeIncrement;
     if (_gridSize.width == 1 && _gridSize.height == 1) {
@@ -428,9 +405,6 @@
     } else {
 	    captureTime.timeValue /= 2;
     }
-    
-    [self _setPercentDone:0.0];
-    YIELD(inThread);
     
     unsigned x, y;
     [_image lockFocus];
@@ -441,30 +415,40 @@
     [NSBezierPath fillRect:imageBounds];
     
     if (addMovieInfo) {
+        [QTMovie enterQTKitOnThreadDisablingThreadSafetyProtection];
         NSAttributedString *info = [self _infoForMovie:_movie];
         [info drawAtPoint:NSMakePoint(8.0 + borderWidth, 4.0)];
+        [QTMovie exitQTKitOnThread];
     }
     
+    NSMutableDictionary* attr = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+                                 [NSValue valueWithSize:smallSize], QTMovieFrameImageSize, 
+                                 [NSNumber numberWithBool:YES], QTMovieFrameImageSessionMode,
+                                 nil];
     for (y = 0; y < (int)_gridSize.height; y++) {
         for (x = 0; x < (int)_gridSize.width; x++) {
-            [_movie setCurrentTime:captureTime];
-            [_previewMovie setCurrentTime:captureTime];
-            
             [self _setPercentDone:((x + y * _gridSize.width) / (_gridSize.width * _gridSize.height)) * 100.0];
-            YIELD(inThread);
             
-            NSImage *frame = [_movie imageAtTime:captureTime];
+            [QTMovie enterQTKitOnThreadDisablingThreadSafetyProtection];
+            [_movie setCurrentTime:captureTime];
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
+                //[_previewMovie setCurrentTime:captureTime];
+            });
+            
+            if (y == ((int)_gridSize.height - 1) && x == ((int)_gridSize.width - 1)) {
+                [attr setObject:[NSNumber numberWithBool:NO] forKey:QTMovieFrameImageSessionMode];
+            }
+            
+            NSImage *frame = [_movie frameImageAtTime:captureTime
+                                       withAttributes:attr 
+                                                error:&error];
+            [QTMovie exitQTKitOnThread];
+            if (frame == nil) {
+                goto signalError;
+            }
             
             [frame setFlipped:YES];
             
-            /*
-             NSBitmapImageRep *imageRep = [NSBitmapImageRep imageRepWithData:[frame TIFFRepresentation]];
-             NSDictionary *props = [NSDictionary dictionary];
-             NSData *data = [imageRep representationUsingType:NSJPEGFileType properties:props];
-             NSString *path = [NSString stringWithFormat:@"~/Desktop/%@.jpg", QTStringFromTime(captureTime), nil];
-             NSURL *url = [NSURL fileURLWithPath:[path stringByExpandingTildeInPath]];
-             [data writeToURL:url options:NSAtomicWrite error:NULL];
-             */
             NSRect dstRect = NSMakeRect(x * (smallSize.width + borderWidth) + borderWidth, y * (smallSize.height + borderWidth) + borderWidth, smallSize.width, smallSize.height);
             if (addMovieInfo) {
                 dstRect.origin.y += 20.0 * 3.0;
@@ -482,7 +466,6 @@
                 [astime drawAtPoint: dstRect.origin];
             }
             [self _setImage:_image];
-            YIELD(inThread);
             captureTime = QTTimeIncrement(captureTime, timeIncrement);
         }
     }
@@ -491,12 +474,14 @@
     [_image unlockFocus];
     
     [self _setProcessing:NO];
-    YIELD(inThread);
-    [_delegate screenGrabberDidCaptureImages:self];
-    YIELD(inThread);
-    if (inThread) {
-        [NSThread exit];
-    }
+    [_delegate performSelectorOnMainThread:@selector(screenGrabberDidCaptureImages:)
+                                withObject:self 
+                             waitUntilDone:NO];
+    return;
+signalError:
+    dispatch_async(dispatch_get_main_queue(), ^(void) {
+        [_delegate screenGrabber:self error:error];
+    });
 }
 
 @end
@@ -507,7 +492,7 @@
 - (void)screenGrabberDidCaptureImages:(FOScreenGrabber *)screenGrabber { return; }
 - (void)screenGrabber:(FOScreenGrabber *)screenGrabber error:(NSError *)error 
 {
-    NSLog(@"%@: %@", [screenGrabber className], [error localizedDescription], nil);
+    NSLog(@"%@: %@", [screenGrabber className], [error localizedDescription]);
 }
 - (void)screenGrabber:(FOScreenGrabber *)screenGrabber processingPercentDone:(float)percentDone { return; }
 - (void)screenGrabber:(FOScreenGrabber *)screenGrabber processingPartialImage:(NSImage *)image { return; }

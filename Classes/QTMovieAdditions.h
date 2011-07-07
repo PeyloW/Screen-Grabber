@@ -29,6 +29,8 @@
 - (BOOL)haveVideoTrack;
 - (BOOL)haveAudioTrack;
 
+- (NSSize)naturalSize;
+
 - (NSString *)videoResolution;
 - (NSString *)videoKbps;
 - (NSString *)videoCodec;
@@ -37,6 +39,8 @@
 - (NSString *)audioKbps;
 - (NSString *)audioCodec;
 
-- (NSImage *)imageAtTime:(QTTime)qttime;
+-(QTMovieLoadState)loadState;
+
+-(BOOL)waitForLoadState:(QTMovieLoadState)loadState;
 
 @end

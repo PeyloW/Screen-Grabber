@@ -18,6 +18,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <QTKit/QTKit.h>
+#import "QTMovieAdditions.h"
 
 @interface FOScreenGrabber : NSObject 
 {
