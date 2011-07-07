@@ -52,8 +52,6 @@
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>${PRODUCT_NAME}</string>
-	<key>NSHumanReadableCopyright</key>
-	<string>2011 Fredrik Olsson</string>
 	<key>CFBundleIconFile</key>
 	<string>ScreenGrabber.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -64,14 +62,16 @@
 	<string>Screen Grabber</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>2.3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2.1.2</string>
-	<key>CFBundleShortVersionString</key>
-	<string>2.1.2-zone</string>
+	<string>2.3</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
+	<key>NSHumanReadableCopyright</key>
+	<string>2011 Fredrik Olsson</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
