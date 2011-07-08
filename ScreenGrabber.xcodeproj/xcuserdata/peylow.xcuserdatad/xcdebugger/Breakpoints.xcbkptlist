@@ -147,11 +147,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/QTMovieAdditions.m"
-         timestampString = "331763510.601608"
+         timestampString = "331830471.553944"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "192"
-         endingLineNumber = "192"
+         startingLineNumber = "199"
+         endingLineNumber = "199"
          landmarkName = "-waitForLoadState:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -161,11 +161,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/QTMovieAdditions.m"
-         timestampString = "331763510.601608"
+         timestampString = "331830471.553944"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "206"
-         endingLineNumber = "206"
+         startingLineNumber = "213"
+         endingLineNumber = "213"
          landmarkName = "-waitForLoadState:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -175,11 +175,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/QTMovieAdditions.m"
-         timestampString = "331763510.601608"
+         timestampString = "331830471.553944"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "204"
-         endingLineNumber = "204"
+         startingLineNumber = "211"
+         endingLineNumber = "211"
          landmarkName = "-waitForLoadState:"
          landmarkType = "5">
       </FileBreakpoint>
@@ -203,25 +203,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/QTMovieAdditions.m"
-         timestampString = "331764823.756128"
+         timestampString = "331830471.553944"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "94"
-         endingLineNumber = "94"
-         landmarkName = "-videoKbps"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "Classes/QTMovieAdditions.m"
-         timestampString = "331763510.601608"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "153"
-         endingLineNumber = "153"
+         startingLineNumber = "160"
+         endingLineNumber = "160"
          landmarkName = "-audioKbps"
          landmarkType = "5">
       </FileBreakpoint>
@@ -237,34 +223,6 @@
          startingLineNumber = "63"
          endingLineNumber = "63"
          landmarkName = "-initWithURL:gridSize:imageWidth:error:"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "Classes/QTMovieAdditions.m"
-         timestampString = "331764823.756128"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "233"
-         endingLineNumber = "233"
-         landmarkName = "-foMedia"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         isPathRelative = "1"
-         filePath = "Classes/QTMovieAdditions.m"
-         timestampString = "331765708.677022"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "245"
-         endingLineNumber = "245"
-         landmarkName = "-foMedia"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

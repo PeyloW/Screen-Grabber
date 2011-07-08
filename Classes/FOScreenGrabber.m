@@ -58,7 +58,7 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
             [result setImageWidth:imageWidth];
             NSDictionary* attr = [NSDictionary dictionaryWithObjectsAndKeys:
                                   url, QTMovieURLAttribute,
-                                  [NSNumber numberWithBool:YES], QTMovieOpenForPlaybackAttribute,
+                                  //[NSNumber numberWithBool:YES], QTMovieOpenForPlaybackAttribute,
                                   QTMovieApertureModeClean, QTMovieApertureModeAttribute, nil];
             QTMovie *movie = [QTMovie movieWithAttributes:attr error:error];
             if ([movie waitForLoadState:QTMovieLoadStateLoaded]) {

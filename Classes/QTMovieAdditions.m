@@ -24,12 +24,6 @@
 
 @end
 
-@interface QTTrack (PrivateAdditions)
-
--(QTMedia*)foMedia;
-
-@end
-
 
 @interface QTMedia (PrivateAdditions)
 
@@ -90,7 +84,7 @@
     if ([tracks count] > 0) {
 		QTTrack *track = [tracks objectAtIndex:0];
 		float seconds = [self _durationInSeconds];
-		SInt64 size = [[track foMedia] mediaSize];
+		SInt64 size = [[track media] mediaSize];
 		if (size > 0) {
 			float kbps = (size / (1024.0 / 8.0)) / seconds;
 			result = [NSString stringWithFormat:@"%.2f", kbps, nil];
@@ -113,12 +107,12 @@
             GetMediaSampleDescription([media quickTimeMedia], 1, (SampleDescriptionHandle)desc);
             OSErr err = GetMoviesError();
             if (err == noErr) {
-                result = [NSString stringWithCString:p2cstr((**desc).name) encoding:NSASCIIStringEncoding];
+                result = [NSString stringWithUTF8String:p2cstr((**desc).name)];
                 if ([result length] == 0) {
 					CodecInfo info;
 					err = GetCodecInfo(&info, (**desc).cType, 0);
 					if (err == noErr) {
-						result = [NSString stringWithCString:p2cstr(info.typeName) encoding:NSASCIIStringEncoding];
+						result = [NSString stringWithUTF8String:p2cstr(info.typeName)];
 					} else {
 						char *bytes = (char *)&((**desc).cType);
 						result = [NSString stringWithFormat:@"%c%c%c%c", bytes[0], bytes[1], bytes[2], bytes[3], nil];
@@ -136,9 +130,16 @@
     NSString *result = @"?";
     NSArray *tracks = [self tracksOfMediaType:QTMediaTypeSound];
     if ([tracks count] > 0) {
-        QTMedia *media = [[tracks objectAtIndex:0] foMedia];
-        long scale = [[media attributeForKey:QTMediaTimeScaleAttribute] longValue];
-        result = [NSString stringWithFormat:@"%g", scale];
+        QTMedia *media = [[tracks objectAtIndex:0] media];
+        SoundDescriptionHandle desc = (SoundDescriptionHandle)NewHandleClear(sizeof(SoundDescriptionHandle));
+        if (desc) {
+            GetMediaSampleDescription([media quickTimeMedia], 1, (SampleDescriptionHandle)desc);
+            OSErr err = GetMoviesError();
+            if (err == noErr) {
+                result = [NSString stringWithFormat:@"%g", ((**desc).sampleRate >> 16) / 1000.0, nil];
+            }
+            DisposeHandle((Handle)desc);
+        }
     }
     return result;
 }
@@ -226,33 +227,20 @@
 
 @end
 
-@implementation QTTrack (PrivateAdditions)
-
--(QTMedia*)foMedia;
-{
-    QTMedia* media = [self media];
-    if (media == nil) {
-        NSString* desc = [self description];
-        NSRange range = [desc rangeOfString:@"QTMedia =" options:NSBackwardsSearch];
-        if (range.location != NSNotFound) {
-            desc = [desc substringFromIndex:range.location+range.length];
-            unsigned long long pointer = 0;
-            if ([[NSScanner scannerWithString:desc] scanHexLongLong:&pointer]) {
-                media = (id)pointer;
-            }
-        }
-    }
-    return media;
-}
-
-@end
-
 
 @implementation QTMedia (PrivateAdditions)
 
 - (SInt64)mediaSize
 {
-    return [[self attributeForKey:QTMediaSampleCountAttribute] longLongValue];
+    Media media = [self quickTimeMedia];
+	SInt64 size;
+	TimeValue64 start = GetMediaDisplayStartTime(media);
+	TimeValue64 duration = GetMediaDisplayDuration(media);
+	OSErr err = GetMediaDataSizeTime64(media, start, duration, &size);
+	if (err == noErr) {
+		return size;
+	}
+	return 0;
 }
 
 @end
