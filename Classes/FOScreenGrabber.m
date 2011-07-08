@@ -66,6 +66,14 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
             } else {
                 result = nil;
             }
+            [[NSNotificationCenter defaultCenter] addObserverForName:NSUserDefaultsDidChangeNotification
+                                                              object:nil queue:nil
+                                                          usingBlock:^(NSNotification *note) 
+            {
+                NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+                [self setImageWidth:[defaults floatForKey:@"imageWidth"]];
+                [self setGridSize:NSMakeSize([defaults floatForKey:@"gridCols"], [defaults floatForKey:@"gridRows"])];
+            }];
         });
     }
     return result;
@@ -146,9 +154,19 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
 
 - (void)setGridSize:(NSSize)gridSize
 {
-    [self willChangeValueForKey:@"gridSize"];
-    _gridSize = gridSize;
-    [self didChangeValueForKey:@"gridSize"];
+    if (!NSEqualSizes(gridSize, _gridSize)) {
+        [self willChangeValueForKey:@"gridSize"];
+        [self willChangeValueForKey:@"gridCols"];
+        [self willChangeValueForKey:@"gridRows"];
+        _gridSize = gridSize;
+        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setFloat:gridSize.width forKey:@"gridCols"];
+        [defaults setFloat:gridSize.height forKey:@"gridRows"];
+        [defaults synchronize];
+        [self didChangeValueForKey:@"gridRows"];
+        [self didChangeValueForKey:@"gridCols"];
+        [self didChangeValueForKey:@"gridSize"];
+    }
 }
 
 -(int)gridCols;
@@ -182,9 +200,14 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
 
 - (void)setImageWidth:(float)imageWidth
 {
-    [self willChangeValueForKey:@"imageWidth"];
-    _imageWidth = imageWidth;
-    [self didChangeValueForKey:@"imageWidth"];
+    if (_imageWidth != imageWidth) {
+        [self willChangeValueForKey:@"imageWidth"];
+        _imageWidth = imageWidth;
+        NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+        [defaults setFloat:_imageWidth forKey:@"imageWidth"];
+        [defaults synchronize];
+        [self didChangeValueForKey:@"imageWidth"];
+    }
 }
 
 - (BOOL)isProcessing
