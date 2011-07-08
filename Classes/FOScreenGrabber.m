@@ -231,50 +231,65 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
         NSDictionary *props = [NSDictionary dictionary];
         data = [imageRep representationUsingType:NSJPEGFileType properties:props];
     }
+    NSError *error = nil;
+    BOOL success = YES;
     if (data) {
-        NSError *error = nil;
         NSURL *url = [self imageURL];
-        xpc_connection_t connection = xpc_connection_create("se.peylow.Screen-Grabber.imagesaver", NULL);
-        xpc_connection_set_event_handler(connection, ^(xpc_object_t object) {
-            char* description = xpc_copy_description(object);
-            NSLog(@"event: %s", description);
-            free(description);
-        });
-        xpc_connection_resume(connection);
-        xpc_object_t message = xpc_dictionary_create(NULL, NULL, 0);
+        if (xpc_connection_create != NULL) {
+            xpc_connection_t connection = xpc_connection_create("se.peylow.Screen-Grabber.imagesaver", NULL);
+            xpc_connection_set_event_handler(connection, ^(xpc_object_t object) {
+                char* description = xpc_copy_description(object);
+                NSLog(@"event: %s", description);
+                free(description);
+            });
+            xpc_connection_resume(connection);
+            xpc_object_t message = xpc_dictionary_create(NULL, NULL, 0);
+            
+            xpc_dictionary_set_string(message, "url", [[url absoluteString] UTF8String]);
+            const void* dataMem = [data bytes];
+            void* sharedMem = mmap((void*)dataMem, [data length], PROT_READ|PROT_WRITE, MAP_ANON|MAP_SHARED, -1, 0);
+            memcpy(sharedMem, dataMem, [data length]);
+            xpc_object_t shmem = xpc_shmem_create(sharedMem, [data length]);
+            xpc_dictionary_set_value(message, "data", shmem);
+            xpc_release(shmem);
+            
+            xpc_object_t reply = xpc_connection_send_message_with_reply_sync(connection, message);
+            if (xpc_get_type(reply) == XPC_TYPE_DICTIONARY) {
+                success = xpc_dictionary_get_bool(reply, "success");
+                if (!success) {
+                    size_t length = 0;
+                    const void* errorData = xpc_dictionary_get_data(reply, "error", &length);
+                    if (errorData) {
+                        NSData* data = [NSData dataWithBytes:errorData length:length];
+                        error = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+                    }
+                }
+            } else {
+                success = NO;
+            }
         
-        xpc_dictionary_set_string(message, "url", [[url absoluteString] UTF8String]);
-        const void* dataMem = [data bytes];
-        void* sharedMem = mmap((void*)dataMem, [data length], PROT_READ|PROT_WRITE, MAP_ANON|MAP_SHARED, -1, 0);
-        memcpy(sharedMem, dataMem, [data length]);
-        xpc_object_t shmem = xpc_shmem_create(sharedMem, [data length]);
-        xpc_dictionary_set_value(message, "data", shmem);
-        xpc_release(shmem);
-        
-        xpc_object_t reply = xpc_connection_send_message_with_reply_sync(connection, message);
-        if (xpc_get_type(reply) == XPC_TYPE_DICTIONARY) {
-            NSLog(@"Reply: %d", (int)xpc_dictionary_get_int64(reply, "reply"));
+            munmap(sharedMem, [data length]);        
+            xpc_release(message);
+            xpc_connection_cancel(connection);
+            xpc_release(connection);
+            
         } else {
-            NSLog(@"Error reply.");
+            success = [data writeToURL:url options:NSAtomicWrite error:&error];
         }
-        
-        munmap(sharedMem, [data length]);        
-        xpc_release(message);
-        xpc_connection_cancel(connection);
-        xpc_release(connection);
-        
-        /*
-         TODO: Make it work on Snow Leopard as well.
-        if (![data writeToURL:url options:NSAtomicWrite error:&error]) {
+        if (!success) {
             [_delegate screenGrabber:self error:error];
         }
-         */
     } else {
-        NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                              NSLocalizedString(@"ErrorSavingImage", @""), NSLocalizedDescriptionKey,
-                              NSLocalizedString(@"ErrorSavingImageDescription", @""), NSLocalizedFailureReasonErrorKey,
-                              nil];
-        NSError *error = [NSError errorWithDomain:@"FOScreenGrabberDomain" code:1 userInfo:dict];
+        success = NO;
+    }
+    if (!success){
+        if (error == nil) {
+            NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+                                  @"Could not save image.", NSLocalizedDescriptionKey,
+                                  @"Image could not be created and saved.", NSLocalizedFailureReasonErrorKey,
+                                  nil];
+            error = [NSError errorWithDomain:@"FOScreenGrabberDomain" code:1 userInfo:dict];
+        }
         [_delegate screenGrabber:self error:error];
     }
     [self _setProcessing:NO];

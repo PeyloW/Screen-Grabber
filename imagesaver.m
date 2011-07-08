@@ -27,9 +27,14 @@ static void imagesaver_peer_event_handler(xpc_connection_t peer, xpc_object_t ev
         NSData* data = [NSData dataWithBytes:sharedMem length:dataLen];
         NSLog(@"data: %d bytes", [data length]);
         
-        BOOL success = [data writeToURL:url options:NSAtomicWrite error:NULL];
+        NSError* error = nil;
+        BOOL success = [data writeToURL:url options:NSAtomicWrite error:&error];
 
         xpc_dictionary_set_bool(reply, "success", success);
+        if (error) {
+            NSData* data = [NSKeyedArchiver archivedDataWithRootObject:error];
+            xpc_dictionary_set_data(reply, "error", [data bytes], [data length]);
+        }
         xpc_connection_send_message(remote, reply);
         xpc_release(reply);
     } else {

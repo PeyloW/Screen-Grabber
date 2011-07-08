@@ -15,11 +15,11 @@
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 		A61370490A92346F008B0900 /* QTMovieAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = A61370480A92346F008B0900 /* QTMovieAdditions.m */; };
 		A61370780A92424F008B0900 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A61370770A92424E008B0900 /* QuickTime.framework */; };
+		A691094D13C722E4006F8F72 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */; };
 		A6A8A64B0A8DF0EB00B0C980 /* FOApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A8A64A0A8DF0EB00B0C980 /* FOApplicationController.m */; };
 		A6CD99680A84976C00F40EDE /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6CD99670A84976C00F40EDE /* QTKit.framework */; };
 		A6CD99A10A849DA700F40EDE /* FOScreenGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CD99A00A849DA700F40EDE /* FOScreenGrabber.m */; };
 		A6F35C3B13C685420091C9B8 /* imagesaver.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F35C3A13C685420091C9B8 /* imagesaver.m */; };
-		A6F35C4213C687100091C9B8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F35C4113C687100091C9B8 /* Foundation.framework */; };
 		A6F35C4413C68C450091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6F35C2D13C685190091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc */; };
 		A6F6D2030A8E3B6D004D3E80 /* FOBatchScreenGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F6D2020A8E3B6D004D3E80 /* FOBatchScreenGrabber.m */; };
 		A6F6D2AF0A8E5AEC004D3E80 /* ScreenGrabber.icns in Resources */ = {isa = PBXBuildFile; fileRef = A6F6D2AE0A8E5AEC004D3E80 /* ScreenGrabber.icns */; };
@@ -82,7 +82,6 @@
 		A6F35C3A13C685420091C9B8 /* imagesaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = imagesaver.m; sourceTree = "<group>"; };
 		A6F35C3C13C6855E0091C9B8 /* imagesaver-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "imagesaver-Info.plist"; sourceTree = "<group>"; };
 		A6F35C3E13C685870091C9B8 /* Screen Grabber.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Screen Grabber.entitlements"; sourceTree = "<group>"; };
-		A6F35C4113C687100091C9B8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A6F6D2010A8E3B6D004D3E80 /* FOBatchScreenGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FOBatchScreenGrabber.h; path = Classes/FOBatchScreenGrabber.h; sourceTree = "<group>"; };
 		A6F6D2020A8E3B6D004D3E80 /* FOBatchScreenGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FOBatchScreenGrabber.m; path = Classes/FOBatchScreenGrabber.m; sourceTree = "<group>"; };
 		A6F6D2AE0A8E5AEC004D3E80 /* ScreenGrabber.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = ScreenGrabber.icns; path = Resources/ScreenGrabber.icns; sourceTree = "<group>"; };
@@ -105,7 +104,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A6F35C4213C687100091C9B8 /* Foundation.framework in Frameworks */,
+				A691094D13C722E4006F8F72 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,6 +115,10 @@
 			isa = PBXGroup;
 			children = (
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
+				A61370770A92424E008B0900 /* QuickTime.framework */,
+				A6CD99670A84976C00F40EDE /* QTKit.framework */,
+				2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */,
+				2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -123,10 +126,6 @@
 		1058C7A8FEA54F5311CA2CBB /* Other Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				A61370770A92424E008B0900 /* QuickTime.framework */,
-				A6CD99670A84976C00F40EDE /* QTKit.framework */,
-				2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */,
-				2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */,
 			);
 			name = "Other Frameworks";
 			sourceTree = "<group>";
@@ -143,7 +142,6 @@
 		2A37F4AAFDCFA73011CA2CEA /* ScreenGrabber */ = {
 			isa = PBXGroup;
 			children = (
-				A6F35C4113C687100091C9B8 /* Foundation.framework */,
 				A6F35C2813C684EE0091C9B8 /* imagesaver */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
