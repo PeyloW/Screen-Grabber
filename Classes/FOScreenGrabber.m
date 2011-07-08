@@ -218,6 +218,49 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     [self performSelectorInBackground:@selector(_captureImagesInBackground) withObject:nil];
 }
 
+- (BOOL)saveImageData:(NSData *)data inXPCServiceWithError:(NSError **)error;
+{
+    BOOL success = YES;
+    xpc_connection_t connection = xpc_connection_create("se.peylow.Screen-Grabber.imagesaver", NULL);
+    xpc_connection_set_event_handler(connection, ^(xpc_object_t object) {
+        char* description = xpc_copy_description(object);
+        NSLog(@"event: %s", description);
+        free(description);
+    });
+    xpc_connection_resume(connection);
+    xpc_object_t message = xpc_dictionary_create(NULL, NULL, 0);
+    
+    xpc_dictionary_set_string(message, "url", [[[self imageURL] absoluteString] UTF8String]);
+    const void* dataMem = [data bytes];
+    void* sharedMem = mmap((void*)dataMem, [data length], PROT_READ|PROT_WRITE, MAP_ANON|MAP_SHARED, -1, 0);
+    memcpy(sharedMem, dataMem, [data length]);
+    xpc_object_t shmem = xpc_shmem_create(sharedMem, [data length]);
+    xpc_dictionary_set_value(message, "data", shmem);
+    xpc_release(shmem);
+    
+    xpc_object_t reply = xpc_connection_send_message_with_reply_sync(connection, message);
+    if (xpc_get_type(reply) == XPC_TYPE_DICTIONARY) {
+        success = xpc_dictionary_get_bool(reply, "success");
+        if (!success) {
+            size_t length = 0;
+            const void* errorData = xpc_dictionary_get_data(reply, "error", &length);
+            if (errorData && error) {
+                NSData* data = [NSData dataWithBytes:errorData length:length];
+                *error = [NSKeyedUnarchiver unarchiveObjectWithData:data];
+            }
+        }
+    } else {
+        success = NO;
+    }
+    
+    munmap(sharedMem, [data length]);        
+    xpc_release(message);
+    xpc_connection_cancel(connection);
+    xpc_release(connection);
+    
+    return success;
+}
+
 - (IBAction)saveImage:(id)sender
 {
     [self _setProcessing:YES];
@@ -225,56 +268,19 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     NSData *data = nil;
     NSString *path = [[self imageURL] path];
     if ([path hasSuffix:@"png"]) {
-        NSDictionary *props = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:0.2] forKey:NSImageCompressionFactor];
+        NSDictionary *props = [NSDictionary dictionary];
         data = [imageRep representationUsingType:NSPNGFileType properties:props];
     } else if ([path hasSuffix:@"jpg"] || [path hasSuffix:@"jpeg"]) {
-        NSDictionary *props = [NSDictionary dictionary];
+        NSDictionary *props = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:0.75f] forKey:NSImageCompressionFactor];
         data = [imageRep representationUsingType:NSJPEGFileType properties:props];
     }
     NSError *error = nil;
     BOOL success = YES;
     if (data) {
-        NSURL *url = [self imageURL];
         if (xpc_connection_create != NULL) {
-            xpc_connection_t connection = xpc_connection_create("se.peylow.Screen-Grabber.imagesaver", NULL);
-            xpc_connection_set_event_handler(connection, ^(xpc_object_t object) {
-                char* description = xpc_copy_description(object);
-                NSLog(@"event: %s", description);
-                free(description);
-            });
-            xpc_connection_resume(connection);
-            xpc_object_t message = xpc_dictionary_create(NULL, NULL, 0);
-            
-            xpc_dictionary_set_string(message, "url", [[url absoluteString] UTF8String]);
-            const void* dataMem = [data bytes];
-            void* sharedMem = mmap((void*)dataMem, [data length], PROT_READ|PROT_WRITE, MAP_ANON|MAP_SHARED, -1, 0);
-            memcpy(sharedMem, dataMem, [data length]);
-            xpc_object_t shmem = xpc_shmem_create(sharedMem, [data length]);
-            xpc_dictionary_set_value(message, "data", shmem);
-            xpc_release(shmem);
-            
-            xpc_object_t reply = xpc_connection_send_message_with_reply_sync(connection, message);
-            if (xpc_get_type(reply) == XPC_TYPE_DICTIONARY) {
-                success = xpc_dictionary_get_bool(reply, "success");
-                if (!success) {
-                    size_t length = 0;
-                    const void* errorData = xpc_dictionary_get_data(reply, "error", &length);
-                    if (errorData) {
-                        NSData* data = [NSData dataWithBytes:errorData length:length];
-                        error = [NSKeyedUnarchiver unarchiveObjectWithData:data];
-                    }
-                }
-            } else {
-                success = NO;
-            }
-        
-            munmap(sharedMem, [data length]);        
-            xpc_release(message);
-            xpc_connection_cancel(connection);
-            xpc_release(connection);
-            
+            success = [self saveImageData:data inXPCServiceWithError:&error];
         } else {
-            success = [data writeToURL:url options:NSAtomicWrite error:&error];
+            success = [data writeToURL:[self imageURL] options:NSAtomicWrite error:&error];
         }
         if (!success) {
             [_delegate screenGrabber:self error:error];
