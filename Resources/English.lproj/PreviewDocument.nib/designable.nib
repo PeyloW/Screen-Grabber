@@ -582,7 +582,7 @@ dWR0YQAAAAA</bytes>
 				</object>
 				<object class="NSAttributedString" key="NS.nan">
 					<string key="NSString">NaN</string>
-					<object class="NSDictionary" key="NSAttributes" id="401892465">
+					<object class="NSDictionary" key="NSAttributes" id="798283788">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys" id="0">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -644,7 +644,7 @@ dWR0YQAAAAA</bytes>
 				</object>
 				<object class="NSAttributedString" key="NS.nan">
 					<string key="NSString">NaN</string>
-					<reference key="NSAttributes" ref="401892465"/>
+					<reference key="NSAttributes" ref="798283788"/>
 				</object>
 				<real value="320" key="NS.min"/>
 				<real value="4096" key="NS.max"/>

@@ -18,10 +18,36 @@
 		A6A8A64B0A8DF0EB00B0C980 /* FOApplicationController.m in Sources */ = {isa = PBXBuildFile; fileRef = A6A8A64A0A8DF0EB00B0C980 /* FOApplicationController.m */; };
 		A6CD99680A84976C00F40EDE /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6CD99670A84976C00F40EDE /* QTKit.framework */; };
 		A6CD99A10A849DA700F40EDE /* FOScreenGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CD99A00A849DA700F40EDE /* FOScreenGrabber.m */; };
+		A6F35C3B13C685420091C9B8 /* imagesaver.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F35C3A13C685420091C9B8 /* imagesaver.m */; };
+		A6F35C4213C687100091C9B8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6F35C4113C687100091C9B8 /* Foundation.framework */; };
+		A6F35C4413C68C450091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6F35C2D13C685190091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc */; };
 		A6F6D2030A8E3B6D004D3E80 /* FOBatchScreenGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F6D2020A8E3B6D004D3E80 /* FOBatchScreenGrabber.m */; };
 		A6F6D2AF0A8E5AEC004D3E80 /* ScreenGrabber.icns in Resources */ = {isa = PBXBuildFile; fileRef = A6F6D2AE0A8E5AEC004D3E80 /* ScreenGrabber.icns */; };
 		A6F6D2EA0A8E6271004D3E80 /* FOScreenGrabberPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F6D2E90A8E6271004D3E80 /* FOScreenGrabberPrefs.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A6F35C3F13C686C10091C9B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A6F35C2C13C685190091C9B8;
+			remoteInfo = imagesaver;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A6F35C4313C68B390091C9B8 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = Contents/XPCServices;
+			dstSubfolderSpec = 1;
+			files = (
+				A6F35C4413C68C450091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
@@ -44,6 +70,19 @@
 		A6CD99670A84976C00F40EDE /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		A6CD999F0A849DA700F40EDE /* FOScreenGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FOScreenGrabber.h; path = Classes/FOScreenGrabber.h; sourceTree = "<group>"; };
 		A6CD99A00A849DA700F40EDE /* FOScreenGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FOScreenGrabber.m; path = Classes/FOScreenGrabber.m; sourceTree = "<group>"; };
+		A6F35C0313C684740091C9B8 /* imagesaver-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "imagesaver-Info.plist"; sourceTree = "<group>"; };
+		A6F35C0513C684740091C9B8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A6F35C0713C684740091C9B8 /* imagesaver-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "imagesaver-Prefix.pch"; sourceTree = "<group>"; };
+		A6F35C0813C684740091C9B8 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		A6F35C2D13C685190091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "se.peylow.Screen-Grabber.imagesaver.xpc"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A6F35C3013C685190091C9B8 /* imagesaver-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "imagesaver-Info.plist"; sourceTree = "<group>"; };
+		A6F35C3213C685190091C9B8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		A6F35C3413C685190091C9B8 /* imagesaver-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "imagesaver-Prefix.pch"; sourceTree = "<group>"; };
+		A6F35C3513C685190091C9B8 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		A6F35C3A13C685420091C9B8 /* imagesaver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = imagesaver.m; sourceTree = "<group>"; };
+		A6F35C3C13C6855E0091C9B8 /* imagesaver-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "imagesaver-Info.plist"; sourceTree = "<group>"; };
+		A6F35C3E13C685870091C9B8 /* Screen Grabber.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Screen Grabber.entitlements"; sourceTree = "<group>"; };
+		A6F35C4113C687100091C9B8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		A6F6D2010A8E3B6D004D3E80 /* FOBatchScreenGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FOBatchScreenGrabber.h; path = Classes/FOBatchScreenGrabber.h; sourceTree = "<group>"; };
 		A6F6D2020A8E3B6D004D3E80 /* FOBatchScreenGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FOBatchScreenGrabber.m; path = Classes/FOBatchScreenGrabber.m; sourceTree = "<group>"; };
 		A6F6D2AE0A8E5AEC004D3E80 /* ScreenGrabber.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = ScreenGrabber.icns; path = Resources/ScreenGrabber.icns; sourceTree = "<group>"; };
@@ -59,6 +98,14 @@
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				A6CD99680A84976C00F40EDE /* QTKit.framework in Frameworks */,
 				A61370780A92424F008B0900 /* QuickTime.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A6F35C2A13C685190091C9B8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6F35C4213C687100091C9B8 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +135,7 @@
 			isa = PBXGroup;
 			children = (
 				8D15AC370486D014006FF6A4 /* Screen Grabber.app */,
+				A6F35C2D13C685190091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +143,13 @@
 		2A37F4AAFDCFA73011CA2CEA /* ScreenGrabber */ = {
 			isa = PBXGroup;
 			children = (
+				A6F35C4113C687100091C9B8 /* Foundation.framework */,
+				A6F35C2813C684EE0091C9B8 /* imagesaver */,
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
+				A6F35C0113C684740091C9B8 /* imagesaver */,
+				A6F35C2E13C685190091C9B8 /* imagesaver */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
 				19C28FB0FE9D524F11CA2CBB /* Products */,
 			);
@@ -135,6 +187,7 @@
 		2A37F4B8FDCFA73011CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				A6F35C3E13C685870091C9B8 /* Screen Grabber.entitlements */,
 				A6F6D2AE0A8E5AEC004D3E80 /* ScreenGrabber.icns */,
 				2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */,
 				2A37F4B6FDCFA73011CA2CEA /* MainMenu.nib */,
@@ -153,6 +206,53 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		A6F35C0113C684740091C9B8 /* imagesaver */ = {
+			isa = PBXGroup;
+			children = (
+				A6F35C0813C684740091C9B8 /* main.c */,
+				A6F35C0213C684740091C9B8 /* Supporting Files */,
+			);
+			path = imagesaver;
+			sourceTree = "<group>";
+		};
+		A6F35C0213C684740091C9B8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A6F35C0313C684740091C9B8 /* imagesaver-Info.plist */,
+				A6F35C0413C684740091C9B8 /* InfoPlist.strings */,
+				A6F35C0713C684740091C9B8 /* imagesaver-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		A6F35C2813C684EE0091C9B8 /* imagesaver */ = {
+			isa = PBXGroup;
+			children = (
+				A6F35C3A13C685420091C9B8 /* imagesaver.m */,
+				A6F35C3C13C6855E0091C9B8 /* imagesaver-Info.plist */,
+			);
+			name = imagesaver;
+			sourceTree = "<group>";
+		};
+		A6F35C2E13C685190091C9B8 /* imagesaver */ = {
+			isa = PBXGroup;
+			children = (
+				A6F35C3513C685190091C9B8 /* main.c */,
+				A6F35C2F13C685190091C9B8 /* Supporting Files */,
+			);
+			path = imagesaver;
+			sourceTree = "<group>";
+		};
+		A6F35C2F13C685190091C9B8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				A6F35C3013C685190091C9B8 /* imagesaver-Info.plist */,
+				A6F35C3113C685190091C9B8 /* InfoPlist.strings */,
+				A6F35C3413C685190091C9B8 /* imagesaver-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -160,6 +260,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "Screen Grabber" */;
 			buildPhases = (
+				A6F35C4313C68B390091C9B8 /* CopyFiles */,
 				8D15AC2B0486D014006FF6A4 /* Resources */,
 				8D15AC300486D014006FF6A4 /* Sources */,
 				8D15AC330486D014006FF6A4 /* Frameworks */,
@@ -167,12 +268,29 @@
 			buildRules = (
 			);
 			dependencies = (
+				A6F35C4013C686C10091C9B8 /* PBXTargetDependency */,
 			);
 			name = "Screen Grabber";
 			productInstallPath = "$(HOME)/Applications";
 			productName = ScreenGrabber;
 			productReference = 8D15AC370486D014006FF6A4 /* Screen Grabber.app */;
 			productType = "com.apple.product-type.application";
+		};
+		A6F35C2C13C685190091C9B8 /* imagesaver */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A6F35C3713C685190091C9B8 /* Build configuration list for PBXNativeTarget "imagesaver" */;
+			buildPhases = (
+				A6F35C2913C685190091C9B8 /* Sources */,
+				A6F35C2A13C685190091C9B8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = imagesaver;
+			productName = imagesaver;
+			productReference = A6F35C2D13C685190091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc */;
+			productType = "com.apple.product-type.bundle";
 		};
 /* End PBXNativeTarget section */
 
@@ -195,11 +313,13 @@
 				Swedish,
 				ch_TW,
 				zh_TW,
+				en,
 			);
 			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* ScreenGrabber */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
+				A6F35C2C13C685190091C9B8 /* imagesaver */,
 				8D15AC270486D014006FF6A4 /* Screen Grabber */,
 			);
 		};
@@ -234,7 +354,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A6F35C2913C685190091C9B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A6F35C3B13C685420091C9B8 /* imagesaver.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A6F35C4013C686C10091C9B8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A6F35C2C13C685190091C9B8 /* imagesaver */;
+			targetProxy = A6F35C3F13C686C10091C9B8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		2A37F4B4FDCFA73011CA2CEA /* PreviewDocument.nib */ = {
@@ -261,13 +397,67 @@
 			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
+		A6F35C0413C684740091C9B8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A6F35C0513C684740091C9B8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		A6F35C3113C685190091C9B8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A6F35C3213C685190091C9B8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		A6F35C3813C685190091C9B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "imagesaver-Info.plist";
+				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "se.peylow.Screen-Grabber.$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xpc;
+			};
+			name = Debug;
+		};
+		A6F35C3913C685190091C9B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				INFOPLIST_FILE = "imagesaver-Info.plist";
+				MACH_O_TYPE = mh_execute;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				PRODUCT_NAME = "se.peylow.Screen-Grabber.$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xpc;
+			};
+			name = Release;
+		};
 		C05733C808A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
+				CODE_SIGN_ENTITLEMENTS = "Screen Grabber.entitlements";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -281,7 +471,7 @@
 		C05733C908A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
+				CODE_SIGN_ENTITLEMENTS = "Screen Grabber.entitlements";
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -293,6 +483,7 @@
 		C05733CC08A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_ENABLE_OBJC_GC = required;
@@ -301,6 +492,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				PROVISIONING_PROFILE = "";
 				SDKROOT = macosx;
 				VALID_ARCHS = "i386 x86_64";
 			};
@@ -325,6 +517,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A6F35C3713C685190091C9B8 /* Build configuration list for PBXNativeTarget "imagesaver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A6F35C3813C685190091C9B8 /* Debug */,
+				A6F35C3913C685190091C9B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C05733C708A9546B00998B17 /* Build configuration list for PBXNativeTarget "Screen Grabber" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
