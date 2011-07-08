@@ -94,6 +94,9 @@
     NSRect frame = [mainWindow frame];
     frame.size = [self windowWillResize:mainWindow toSize:frame.size];
     [mainWindow setFrame:frame display:YES];
+    [[text1 cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[text2 cell] setBackgroundStyle:NSBackgroundStyleRaised];
+    [[text3 cell] setBackgroundStyle:NSBackgroundStyleRaised];
 }
 
 - (BOOL)readFromURL:(NSURL *)url ofType:(NSString *)typeName error:(NSError **)error

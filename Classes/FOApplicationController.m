@@ -30,12 +30,19 @@
 
 @implementation FOApplicationController
 
+static NSMutableSet* panels = nil;
+
 - (IBAction)batchProcessMovies:(id)sender
 {
-    NSOpenPanel *panel = [NSOpenPanel openPanel];
+    if (panels == nil) {
+        panels = [NSMutableSet setWithCapacity:4];
+    }
+    NSOpenPanel* panel = [NSOpenPanel openPanel];
+    [panels addObject:panel];
     [panel setCanChooseDirectories:YES];
     [panel setAllowsMultipleSelection:YES];
-    [panel beginWithCompletionHandler:^(NSInteger result) {
+    [panel beginWithCompletionHandler:^(NSInteger result) 
+    {
         if (result == NSOKButton) {
             [batchProcessingPanel orderFront:self];
             NSArray *originalURLs = [panel URLs];
@@ -68,6 +75,7 @@
                 [batchScreenGrabber startBatchWithThreads:1];
             }
         }
+        [panels removeObject:panel];
     }];
 }
 

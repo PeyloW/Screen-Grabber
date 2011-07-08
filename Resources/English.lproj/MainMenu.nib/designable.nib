@@ -1338,26 +1338,25 @@
 										<object class="NSTableView" id="200633258">
 											<reference key="NSNextResponder" ref="930116909"/>
 											<int key="NSvFlags">256</int>
-											<string key="NSFrameSize">{255, 72}</string>
+											<string key="NSFrameSize">{266, 72}</string>
 											<reference key="NSSuperview" ref="930116909"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSTableHeaderView" key="NSHeaderView" id="346304739">
 												<reference key="NSNextResponder" ref="345921291"/>
 												<int key="NSvFlags">256</int>
-												<string key="NSFrameSize">{255, 17}</string>
+												<string key="NSFrameSize">{266, 17}</string>
 												<reference key="NSSuperview" ref="345921291"/>
 												<reference key="NSTableView" ref="200633258"/>
 											</object>
-											<object class="_NSCornerView" key="NSCornerView" id="605897109">
-												<reference key="NSNextResponder" ref="451673676"/>
+											<object class="_NSCornerView" key="NSCornerView">
+												<nil key="NSNextResponder"/>
 												<int key="NSvFlags">256</int>
 												<string key="NSFrame">{{256, 0}, {12, 17}}</string>
-												<reference key="NSSuperview" ref="451673676"/>
 											</object>
 											<object class="NSMutableArray" key="NSTableColumns">
 												<bool key="EncodedWithXMLCoder">YES</bool>
 												<object class="NSTableColumn" id="629711031">
-													<double key="NSWidth">252.14453125</double>
+													<double key="NSWidth">263.14453125</double>
 													<double key="NSMinWidth">40</double>
 													<double key="NSMaxWidth">1000</double>
 													<object class="NSTableHeaderCell" key="NSHeaderCell">
@@ -1405,7 +1404,7 @@
 											<int key="NSTableViewGroupRowStyle">1</int>
 										</object>
 									</object>
-									<string key="NSFrame">{{1, 17}, {255, 72}}</string>
+									<string key="NSFrame">{{1, 17}, {266, 72}}</string>
 									<reference key="NSSuperview" ref="451673676"/>
 									<reference key="NSNextKeyView" ref="200633258"/>
 									<reference key="NSDocView" ref="200633258"/>
@@ -1439,14 +1438,13 @@
 										<bool key="EncodedWithXMLCoder">YES</bool>
 										<reference ref="346304739"/>
 									</object>
-									<string key="NSFrame">{{1, 0}, {255, 17}}</string>
+									<string key="NSFrame">{{1, 0}, {266, 17}}</string>
 									<reference key="NSSuperview" ref="451673676"/>
 									<reference key="NSNextKeyView" ref="346304739"/>
 									<reference key="NSDocView" ref="346304739"/>
 									<reference key="NSBGColor" ref="611273515"/>
 									<int key="NScvFlags">4</int>
 								</object>
-								<reference ref="605897109"/>
 							</object>
 							<string key="NSFrame">{{0, 35}, {268, 90}}</string>
 							<reference key="NSSuperview" ref="90765016"/>
@@ -3344,6 +3342,59 @@
 							<object class="IBActionInfo">
 								<string key="name">captureImagesAs:</string>
 								<string key="candidateClassName">id</string>
+							</object>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>mainWindow</string>
+							<string>progressSheet</string>
+							<string>text1</string>
+							<string>text2</string>
+							<string>text3</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSWindow</string>
+							<string>NSWindow</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
+							<string>NSTextField</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>mainWindow</string>
+							<string>progressSheet</string>
+							<string>text1</string>
+							<string>text2</string>
+							<string>text3</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBToOneOutletInfo">
+								<string key="name">mainWindow</string>
+								<string key="candidateClassName">NSWindow</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">progressSheet</string>
+								<string key="candidateClassName">NSWindow</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">text1</string>
+								<string key="candidateClassName">NSTextField</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">text2</string>
+								<string key="candidateClassName">NSTextField</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">text3</string>
+								<string key="candidateClassName">NSTextField</string>
 							</object>
 						</object>
 					</object>

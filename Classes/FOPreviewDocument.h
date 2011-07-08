@@ -23,8 +23,9 @@
 @interface FOPreviewDocument : NSDocument <NSComboBoxDataSource>
 {
 @protected
-    NSWindow *mainWindow;
-    NSWindow *progressSheet;
+    IBOutlet NSWindow *mainWindow;
+    IBOutlet NSWindow *progressSheet;
+    IBOutlet NSTextField *text1, *text2, *text3;
     QTMovieView *movieView;
     NSProgressIndicator *progressIndicator;
 @private 
