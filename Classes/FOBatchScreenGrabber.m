@@ -72,7 +72,7 @@
     NSArray *result = nil;
     @synchronized(self) {
         if (_urls) {
-            result = [_urls copy];
+            result = [[_urls copy] autorelease];
         } else {
             result = [NSArray array];
         }
@@ -83,7 +83,7 @@
 - (NSArray *)pendingFiles
 {
     if (_urls) {
-        NSMutableArray *files = [_urls mutableCopy];
+        NSMutableArray *files = [[_urls mutableCopy] autorelease];
         uint i, count = [files count];
         for (i = 0; i < count; i++) {
             NSString *file = [[[files objectAtIndex:i] path] lastPathComponent];

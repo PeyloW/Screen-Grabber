@@ -30,15 +30,9 @@
 
 @implementation FOApplicationController
 
-static NSMutableSet* panels = nil;
-
 - (IBAction)batchProcessMovies:(id)sender
 {
-    if (panels == nil) {
-        panels = [NSMutableSet setWithCapacity:4];
-    }
-    NSOpenPanel* panel = [NSOpenPanel openPanel];
-    [panels addObject:panel];
+    NSOpenPanel* panel = [[NSOpenPanel openPanel] retain];
     [panel setCanChooseDirectories:YES];
     [panel setAllowsMultipleSelection:YES];
     [panel beginWithCompletionHandler:^(NSInteger result) 
@@ -75,7 +69,6 @@ static NSMutableSet* panels = nil;
                 [batchScreenGrabber startBatchWithThreads:1];
             }
         }
-        [panels removeObject:panel];
     }];
 }
 
