@@ -79,6 +79,14 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     return result;
 }
 
+-(void)dealloc;
+{
+    [_movie release];
+    [_imageURL release];
+    [_image release];
+    [super dealloc];
+}
+
 - (id)delegate
 {
     return _delegate;
@@ -110,7 +118,8 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     dispatch_sync_on_main_queue(^(void) {
         [self willChangeValueForKey:@"movie"];
         [self willChangeValueForKey:@"previewMovie"];
-        _movie = movie;
+        [_movie autorelease];
+        _movie = [movie retain];
         [self didChangeValueForKey:@"previewMovie"];
         [self didChangeValueForKey:@"movie"];
     });
@@ -142,7 +151,8 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
 - (void)setImageURL:(NSURL *)url
 {
     [self willChangeValueForKey:@"imageURL"];
-    _imageURL = url;
+    [_imageURL autorelease];
+    _imageURL = [url copy];
     [self didChangeValueForKey:@"imageURL"];
 }
 
@@ -241,6 +251,7 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     [self performSelectorInBackground:@selector(_captureImagesInBackground) withObject:nil];
 }
 
+/*
 - (BOOL)saveImageData:(NSData *)data inXPCServiceWithError:(NSError **)error;
 {
     BOOL success = YES;
@@ -283,6 +294,7 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     
     return success;
 }
+*/
 
 - (IBAction)saveImage:(id)sender
 {
@@ -299,12 +311,12 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     }
     NSError *error = nil;
     BOOL success = YES;
-    if (data) {
-        if (xpc_connection_create != NULL) {
+    if (data) { 
+        /*        if (xpc_connection_create != NULL) {
             success = [self saveImageData:data inXPCServiceWithError:&error];
-        } else {
+        } else { */
             success = [data writeToURL:[self imageURL] options:NSAtomicWrite error:&error];
-        }
+        //        }
         if (!success) {
             [_delegate screenGrabber:self error:error];
         }
@@ -333,7 +345,8 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     dispatch_sync_on_main_queue(^(void) {
         [self willChangeValueForKey:@"image"];
         if (_image != image) {
-            _image = image;
+            [_image autorelease];
+            _image = [image retain];
         }
         [self didChangeValueForKey:@"image"];
         if ([self isProcessing]) {
@@ -423,18 +436,18 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     NSFont *font = [NSFont fontWithName:@"Lucida Grande" size:12.0];
     [attrs setObject:font forKey:NSFontAttributeName];
     [attrs setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
-    NSShadow *shadow = [[NSShadow alloc] init];
+    NSShadow *shadow = [[[NSShadow alloc] init] autorelease];
     [shadow setShadowOffset:NSMakeSize(1.0, -2.0)];
     [shadow setShadowBlurRadius:1.25];
     [shadow setShadowColor:[NSColor blackColor]];
     [attrs setObject:shadow forKey:NSShadowAttributeName];
-    return [[NSAttributedString alloc] initWithString:time attributes:attrs];
+    return [[[NSAttributedString alloc] initWithString:time attributes:attrs] autorelease];
 }
 
 
 - (void)_captureImagesInBackground
 {
-    NSError* error = nil;
+    __block NSError* error = nil;
     BOOL success = YES;
     [_delegate performSelectorOnMainThread:@selector(screenGrabberWillCaptureImages:)
                                 withObject:self 
@@ -506,20 +519,22 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
         for (x = 0; x < (int)_gridSize.width; x++) {
             [self _setPercentDone:((x + y * _gridSize.width) / (_gridSize.width * _gridSize.height)) * 100.0];
             
-            [QTMovie enterQTKitOnThreadDisablingThreadSafetyProtection];
-            [_movie setCurrentTime:captureTime];
-            dispatch_async(dispatch_get_main_queue(), ^(void) {
-                //[_previewMovie setCurrentTime:captureTime];
+            //[QTMovie enterQTKitOnThreadDisablingThreadSafetyProtection];
+            dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                [_movie setCurrentTime:captureTime];
             });
             
             if (y == ((int)_gridSize.height - 1) && x == ((int)_gridSize.width - 1)) {
                 [attr setObject:[NSNumber numberWithBool:NO] forKey:QTMovieFrameImageSessionMode];
             }
             
-            NSImage *frame = [_movie frameImageAtTime:captureTime
-                                       withAttributes:attr 
-                                                error:&error];
-            [QTMovie exitQTKitOnThread];
+            __block NSImage *frame;
+            dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                frame = [[_movie frameImageAtTime:captureTime
+                                  withAttributes:attr 
+                                           error:&error] retain];
+            });
+            //            [QTMovie exitQTKitOnThread];
             if (frame == nil) {
                 goto signalError;
             }
@@ -532,6 +547,8 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
             }
             NSRect srcRect = NSMakeRect(0, 0, [frame size].width, [frame size].height); 
             [frame drawInRect:dstRect fromRect:srcRect operation:NSCompositeCopy fraction:1.0];
+            [frame release];
+            
             if (addBorder) {
                 [[[NSColor blackColor] colorWithAlphaComponent:0.5] set];
                 [NSBezierPath strokeRect:dstRect];

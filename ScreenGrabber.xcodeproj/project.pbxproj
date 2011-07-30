@@ -20,21 +20,10 @@
 		A6CD99680A84976C00F40EDE /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A6CD99670A84976C00F40EDE /* QTKit.framework */; };
 		A6CD99A10A849DA700F40EDE /* FOScreenGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = A6CD99A00A849DA700F40EDE /* FOScreenGrabber.m */; };
 		A6F35C3B13C685420091C9B8 /* imagesaver.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F35C3A13C685420091C9B8 /* imagesaver.m */; };
-		A6F35C4413C68C450091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc in CopyFiles */ = {isa = PBXBuildFile; fileRef = A6F35C2D13C685190091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc */; };
 		A6F6D2030A8E3B6D004D3E80 /* FOBatchScreenGrabber.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F6D2020A8E3B6D004D3E80 /* FOBatchScreenGrabber.m */; };
 		A6F6D2AF0A8E5AEC004D3E80 /* ScreenGrabber.icns in Resources */ = {isa = PBXBuildFile; fileRef = A6F6D2AE0A8E5AEC004D3E80 /* ScreenGrabber.icns */; };
 		A6F6D2EA0A8E6271004D3E80 /* FOScreenGrabberPrefs.m in Sources */ = {isa = PBXBuildFile; fileRef = A6F6D2E90A8E6271004D3E80 /* FOScreenGrabberPrefs.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		A6F35C3F13C686C10091C9B8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 2A37F4A9FDCFA73011CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A6F35C2C13C685190091C9B8;
-			remoteInfo = imagesaver;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		A6F35C4313C68B390091C9B8 /* CopyFiles */ = {
@@ -43,7 +32,6 @@
 			dstPath = Contents/XPCServices;
 			dstSubfolderSpec = 1;
 			files = (
-				A6F35C4413C68C450091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -266,7 +254,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				A6F35C4013C686C10091C9B8 /* PBXTargetDependency */,
 			);
 			name = "Screen Grabber";
 			productInstallPath = "$(HOME)/Applications";
@@ -362,14 +349,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		A6F35C4013C686C10091C9B8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = A6F35C2C13C685190091C9B8 /* imagesaver */;
-			targetProxy = A6F35C3F13C686C10091C9B8 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		2A37F4B4FDCFA73011CA2CEA /* PreviewDocument.nib */ = {
 			isa = PBXVariantGroup;
@@ -455,7 +434,6 @@
 		C05733C808A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Screen Grabber.entitlements";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -469,7 +447,6 @@
 		C05733C908A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "Screen Grabber.entitlements";
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
@@ -485,7 +462,6 @@
 				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_OBJC_GC = required;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -504,7 +480,6 @@
 				CODE_SIGN_IDENTITY = "3rd Party Mac Developer Application: Fredrik Olsson";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_OBJC_GC = required;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
