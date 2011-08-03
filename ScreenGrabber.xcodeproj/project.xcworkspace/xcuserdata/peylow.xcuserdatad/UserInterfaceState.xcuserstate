@@ -7207,7 +7207,7 @@
 		<string>PrimaryDocumentSelectedCharacterRange</string>
 		<string>PrimaryDocumentTimestamp</string>
 		<string>PrimaryDocumentVisibleCharacterRange</string>
-		<real>334085108.41431701</real>
+		<real>334085110.516406</real>
 		<string>{0, 741}</string>
 		<dict>
 			<key>$class</key>
@@ -7985,7 +7985,7 @@
 			</dict>
 		</dict>
 		<string>file://localhost/Users/peylow/Projects/mac/Screen-Grabber/ScreenGrabber.xcodeproj/</string>
-		<real>334085108.41394299</real>
+		<real>334085116.47945601</real>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -11354,7 +11354,7 @@
 				<integer>896</integer>
 			</dict>
 		</dict>
-		<real>334085108.41533601</real>
+		<real>334085116.48032498</real>
 		<dict>
 			<key>$class</key>
 			<dict>
