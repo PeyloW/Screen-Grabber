@@ -134,9 +134,9 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
 {
     __block NSURL* result = nil;
     dispatch_sync_on_main_queue(^(void) {    
-        result = [_movie attributeForKey:QTMovieURLAttribute];
+        result = [[_movie attributeForKey:QTMovieURLAttribute] retain];
     });
-    return result;
+    return [result autorelease];
 }
 
 - (NSURL *)imageURL
@@ -243,7 +243,7 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
 
 - (IBAction)captureImages:(id)sender
 {
-    [self performSelectorInBackground:@selector(_captureImagesInBackground) withObject:nil];
+    [self _captureImagesInBackground];
 }
 
 - (IBAction)captureImagesInThread:(id)sender

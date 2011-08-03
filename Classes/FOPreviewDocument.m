@@ -45,7 +45,7 @@
 
 - (IBAction)captureImages:(id)sender;
 {
-    [_screenGrabber captureImages:sender];
+    [_screenGrabber captureImagesInThread:sender];
 }
 
 
@@ -63,7 +63,7 @@
         [panel orderOut:self];
         if (result == NSOKButton) {
             [_screenGrabber setImageURL:[panel URL]];
-            [_screenGrabber captureImages:self];
+            [_screenGrabber captureImagesInThread:nil];
         }
     }];
 }

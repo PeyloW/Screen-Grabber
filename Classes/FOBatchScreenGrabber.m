@@ -124,7 +124,7 @@
         @synchronized(self) {
             _runningThreads++;
             //[NSThread detachNewThreadSelector:@selector(_processMovies) toTarget:self withObject:nil];
-            [self performSelectorOnMainThread:@selector(_processMovies) withObject:nil waitUntilDone:NO];
+            [self performSelectorInBackground:@selector(_processMovies) withObject:nil];
         }
         [self didChangeValueForKey:@"isProcessing"];
     }
@@ -148,14 +148,14 @@
 // Process movies on this thread until there is no more to fetch!
 - (void)_processMovies
 {
-    
+    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     while (1) {
         NSURL *nextURL = nil;
         [self willChangeValueForKey:@"pendingFiles"];
         [self willChangeValueForKey:@"pendingURLs"];
         @synchronized(_urls) {
             if ([_urls count] > 0) {
-                nextURL = [_urls objectAtIndex:0];
+                nextURL = [[_urls objectAtIndex:0] retain];
                 [_urls removeObject:nextURL];
             }
         }
@@ -189,6 +189,7 @@
                 }
             }
             [self _setCurrentURL:nil];
+            [nextURL release];
         } else {
             break;
         }
@@ -198,7 +199,7 @@
         _runningThreads--;
     }
     [self didChangeValueForKey:@"isProcessing"];
-    //[pool release];
+    [pool release];
     //[NSThread exit];
 }
 

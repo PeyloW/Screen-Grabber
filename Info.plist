@@ -66,8 +66,10 @@
 	<string>2.3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array/>
 	<key>CFBundleVersion</key>
-	<string>2.3</string>
+	<string>2.3.1</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
 	<key>NSHumanReadableCopyright</key>
@@ -76,6 +78,8 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSServices</key>
+	<array/>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -95,5 +99,7 @@
 			</dict>
 		</dict>
 	</array>
+	<key>UTImportedTypeDeclarations</key>
+	<array/>
 </dict>
 </plist>
