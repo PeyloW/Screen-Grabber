@@ -17,8 +17,8 @@
 //
 
 #import "FOBatchScreenGrabber.h"
-
 #import "FOScreenGrabber.h"
+#include <pwd.h>
 
 @interface FOBatchScreenGrabber (Private)
 
@@ -149,6 +149,18 @@
 - (void)_processMovies
 {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+    //NSURL* baseURL = [[NSFileManager defaultManager] URLForDirectory:NSPicturesDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+    struct passwd pd;
+    struct passwd* pwdptr=&pd;
+    struct passwd* tempPwdPtr;
+    char pwdbuffer[200];
+    int  pwdlinelen = sizeof(pwdbuffer);
+    NSURL* baseURL = nil;
+    if ((getpwuid_r(getuid(),pwdptr,pwdbuffer,pwdlinelen,&tempPwdPtr))==0) {
+        baseURL = [[NSURL fileURLWithPath:[NSString stringWithCString:pd.pw_dir encoding:NSUTF8StringEncoding]] URLByAppendingPathComponent:@"Pictures"];
+        printf("The initial directory is:    %s\n", pd.pw_dir);
+    }
+    //NSURL* baseURL = [NSURL fileURLWithPath:[@"~/Pictures" stringByExpandingTildeInPath]];
     while (1) {
         NSURL *nextURL = nil;
         [self willChangeValueForKey:@"pendingFiles"];
@@ -175,6 +187,9 @@
                 if (screenGrabber) {
                     [screenGrabber setDelegate:delegate];
                     [screenGrabber captureImages:self]; // This could fail...
+                    NSString* name = [[screenGrabber imageURL] lastPathComponent];
+                    NSURL* imageURL = [baseURL URLByAppendingPathComponent:name];                    
+                    [screenGrabber setImageURL:imageURL];
                     [screenGrabber saveImage:self];     // And this could fail...
                     [_delegate batchScreenGrabber:self didProcessURL:nextURL];
                 } else {
@@ -199,6 +214,7 @@
         _runningThreads--;
     }
     [self didChangeValueForKey:@"isProcessing"];
+    [[NSWorkspace sharedWorkspace] performSelectorOnMainThread:@selector(openURL:) withObject:baseURL waitUntilDone:NO];
     [pool release];
     //[NSThread exit];
 }

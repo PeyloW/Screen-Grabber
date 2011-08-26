@@ -51,21 +51,7 @@
 
 - (IBAction)captureImagesAs:(id)sender;
 {
-    NSSavePanel *panel = [NSSavePanel savePanel];
-    [panel setAllowedFileTypes:[NSArray arrayWithObjects:@"jpeg", @"png", nil]];
-    [panel setCanCreateDirectories:YES];
-    [panel setCanSelectHiddenExtension:YES];
-    NSString *dir = [[[_screenGrabber imageURL] path] stringByDeletingLastPathComponent];
-    NSString *name = [[[_screenGrabber imageURL] path] lastPathComponent];
-    [panel setDirectoryURL:[NSURL fileURLWithPath:dir isDirectory:YES]];
-    [panel setNameFieldStringValue:name];
-    [panel beginSheetModalForWindow:mainWindow completionHandler:^(NSInteger result) {
-        [panel orderOut:self];
-        if (result == NSOKButton) {
-            [_screenGrabber setImageURL:[panel URL]];
-            [_screenGrabber captureImagesInThread:nil];
-        }
-    }];
+    [_screenGrabber captureImagesInThread:nil];
 }
 
 @end
@@ -130,9 +116,23 @@
 
 - (void)screenGrabberDidCaptureImages:(FOScreenGrabber *)screenGrabber 
 {
-    [screenGrabber saveImage:self];
     [NSApp endSheet:progressSheet];
     [progressSheet orderOut:self];
+    NSSavePanel *panel = [NSSavePanel savePanel];
+    [panel setAllowedFileTypes:[NSArray arrayWithObjects:@"jpeg", @"png", nil]];
+    [panel setCanCreateDirectories:YES];
+    [panel setCanSelectHiddenExtension:YES];
+    NSString *dir = [[[_screenGrabber imageURL] path] stringByDeletingLastPathComponent];
+    NSString *name = [[[_screenGrabber imageURL] path] lastPathComponent];
+    [panel setDirectoryURL:[NSURL fileURLWithPath:dir isDirectory:YES]];
+    [panel setNameFieldStringValue:name];
+    [panel beginSheetModalForWindow:mainWindow completionHandler:^(NSInteger result) {
+        [panel orderOut:self];
+        if (result == NSOKButton) {
+            [_screenGrabber setImageURL:[panel URL]];
+            [screenGrabber saveImage:self];
+        }
+    }];
 }
 
 - (void)screenGrabber:(FOScreenGrabber *)screenGrabber error:(NSError *)error

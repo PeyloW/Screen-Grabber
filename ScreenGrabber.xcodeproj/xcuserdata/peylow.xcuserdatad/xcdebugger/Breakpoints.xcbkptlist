@@ -60,7 +60,7 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "No"
+         shouldBeEnabled = "Yes"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "1"
@@ -74,28 +74,28 @@
          landmarkType = "5">
          <Locations>
             <Location
-               shouldBeEnabled = "No"
+               shouldBeEnabled = "Yes"
                ignoreCount = "0"
                continueAfterRunningActions = "No"
                symbolName = "-[FOScreenGrabber(Private) _captureImagesInBackground]"
-               urlString = "file://localhost/Users/peylow/Desktop/Screen-Grabber/Classes/FOScreenGrabber.m"
-               timestampString = "331754726.078234"
+               urlString = "file://localhost/Users/peylow/Projects/mac/Screen-Grabber/Classes/FOScreenGrabber.m"
+               timestampString = "336073785.311759"
                startingColumnNumber = "9223372036854775807"
                endingColumnNumber = "9223372036854775807"
-               startingLineNumber = "510"
-               endingLineNumber = "510">
+               startingLineNumber = "576"
+               endingLineNumber = "576">
             </Location>
             <Location
-               shouldBeEnabled = "No"
+               shouldBeEnabled = "Yes"
                ignoreCount = "0"
                continueAfterRunningActions = "No"
-               symbolName = "__54-[FOScreenGrabber(Private) _captureImagesInBackground]_block_invoke_0359"
-               urlString = "file://localhost/Users/peylow/Desktop/Screen-Grabber/Classes/FOScreenGrabber.m"
-               timestampString = "331754726.078737"
+               symbolName = "__54-[FOScreenGrabber(Private) _captureImagesInBackground]_block_invoke_0377"
+               urlString = "file://localhost/Users/peylow/Projects/mac/Screen-Grabber/Classes/FOScreenGrabber.m"
+               timestampString = "336073785.312213"
                startingColumnNumber = "9223372036854775807"
                endingColumnNumber = "9223372036854775807"
-               startingLineNumber = "510"
-               endingLineNumber = "510">
+               startingLineNumber = "576"
+               endingLineNumber = "576">
             </Location>
          </Locations>
       </FileBreakpoint>
@@ -254,7 +254,7 @@
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
-         shouldBeEnabled = "Yes"
+         shouldBeEnabled = "No"
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "1"
@@ -357,11 +357,81 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "Classes/FOBatchScreenGrabber.m"
-         timestampString = "334083378.435333"
+         timestampString = "336071425.506874"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "176"
-         endingLineNumber = "176"
+         startingLineNumber = "188"
+         endingLineNumber = "188"
+         landmarkName = "-_processMovies"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "Classes/FOScreenGrabber.m"
+         timestampString = "336068310.177639"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "451"
+         endingLineNumber = "451"
+         landmarkName = "-_captureImagesInBackground"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "Classes/FOScreenGrabber.m"
+         timestampString = "336068411.507176"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "539"
+         endingLineNumber = "539"
+         landmarkName = "-_captureImagesInBackground"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "Classes/FOBatchScreenGrabber.m"
+         timestampString = "336071425.506874"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "193"
+         endingLineNumber = "193"
+         landmarkName = "-_processMovies"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "Classes/FOBatchScreenGrabber.m"
+         timestampString = "336071425.506874"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "163"
+         endingLineNumber = "163"
+         landmarkName = "-_processMovies"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "Classes/FOBatchScreenGrabber.m"
+         timestampString = "336071371.269174"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "159"
+         endingLineNumber = "159"
          landmarkName = "-_processMovies"
          landmarkType = "5">
       </FileBreakpoint>

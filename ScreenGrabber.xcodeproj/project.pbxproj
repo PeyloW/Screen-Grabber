@@ -58,10 +58,6 @@
 		A6CD99670A84976C00F40EDE /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		A6CD999F0A849DA700F40EDE /* FOScreenGrabber.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FOScreenGrabber.h; path = Classes/FOScreenGrabber.h; sourceTree = "<group>"; };
 		A6CD99A00A849DA700F40EDE /* FOScreenGrabber.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FOScreenGrabber.m; path = Classes/FOScreenGrabber.m; sourceTree = "<group>"; };
-		A6F35C0313C684740091C9B8 /* imagesaver-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "imagesaver-Info.plist"; sourceTree = "<group>"; };
-		A6F35C0513C684740091C9B8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		A6F35C0713C684740091C9B8 /* imagesaver-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "imagesaver-Prefix.pch"; sourceTree = "<group>"; };
-		A6F35C0813C684740091C9B8 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		A6F35C2D13C685190091C9B8 /* se.peylow.Screen-Grabber.imagesaver.xpc */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "se.peylow.Screen-Grabber.imagesaver.xpc"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A6F35C3013C685190091C9B8 /* imagesaver-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "imagesaver-Info.plist"; sourceTree = "<group>"; };
 		A6F35C3213C685190091C9B8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -134,7 +130,6 @@
 				2A37F4ABFDCFA73011CA2CEA /* Classes */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
-				A6F35C0113C684740091C9B8 /* imagesaver */,
 				A6F35C2E13C685190091C9B8 /* imagesaver */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
 				19C28FB0FE9D524F11CA2CBB /* Products */,
@@ -190,25 +185,6 @@
 				1058C7A8FEA54F5311CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		A6F35C0113C684740091C9B8 /* imagesaver */ = {
-			isa = PBXGroup;
-			children = (
-				A6F35C0813C684740091C9B8 /* main.c */,
-				A6F35C0213C684740091C9B8 /* Supporting Files */,
-			);
-			path = imagesaver;
-			sourceTree = "<group>";
-		};
-		A6F35C0213C684740091C9B8 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				A6F35C0313C684740091C9B8 /* imagesaver-Info.plist */,
-				A6F35C0413C684740091C9B8 /* InfoPlist.strings */,
-				A6F35C0713C684740091C9B8 /* imagesaver-Prefix.pch */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		A6F35C2813C684EE0091C9B8 /* imagesaver */ = {
@@ -374,14 +350,6 @@
 			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
-		A6F35C0413C684740091C9B8 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				A6F35C0513C684740091C9B8 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		A6F35C3113C685190091C9B8 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -434,6 +402,7 @@
 		C05733C808A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Screen Grabber.entitlements";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -447,6 +416,7 @@
 		C05733C908A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "Screen Grabber.entitlements";
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;

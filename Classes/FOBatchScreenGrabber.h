@@ -23,6 +23,7 @@
 {
 @private
     NSMutableArray *_urls;
+    NSURL* _saveToURL;
     NSURL *_currentURL;
     uint _runningThreads;
     id _delegate;
