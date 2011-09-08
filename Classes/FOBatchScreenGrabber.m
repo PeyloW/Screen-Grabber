@@ -144,22 +144,9 @@
     
 }
 
-
-// Process movies on this thread until there is no more to fetch!
-- (void)_processMovies
+-(void)_processMoviesToURL:(NSURL*)baseURL;
 {
     NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-    //NSURL* baseURL = [[NSFileManager defaultManager] URLForDirectory:NSPicturesDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
-    struct passwd pd;
-    struct passwd* pwdptr=&pd;
-    struct passwd* tempPwdPtr;
-    char pwdbuffer[200];
-    int  pwdlinelen = sizeof(pwdbuffer);
-    NSURL* baseURL = nil;
-    if ((getpwuid_r(getuid(),pwdptr,pwdbuffer,pwdlinelen,&tempPwdPtr))==0) {
-        baseURL = [[NSURL fileURLWithPath:[NSString stringWithCString:pd.pw_dir encoding:NSUTF8StringEncoding]] URLByAppendingPathComponent:@"Pictures"];
-        printf("The initial directory is:    %s\n", pd.pw_dir);
-    }
     //NSURL* baseURL = [NSURL fileURLWithPath:[@"~/Pictures" stringByExpandingTildeInPath]];
     while (1) {
         NSURL *nextURL = nil;
@@ -217,6 +204,42 @@
     [[NSWorkspace sharedWorkspace] performSelectorOnMainThread:@selector(openURL:) withObject:baseURL waitUntilDone:NO];
     [pool release];
     //[NSThread exit];
+}
+
+
+// Process movies on this thread until there is no more to fetch!
+- (void)_processMovies
+{
+    if (_saveToURL) {
+        [self _processMoviesToURL:_saveToURL];
+    } else {
+        NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
+        //NSURL* baseURL = [[NSFileManager defaultManager] URLForDirectory:NSPicturesDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+        struct passwd pd;
+        struct passwd* pwdptr=&pd;
+        struct passwd* tempPwdPtr;
+        char pwdbuffer[200];
+        int  pwdlinelen = sizeof(pwdbuffer);
+        NSURL* baseURL = nil;
+        if ((getpwuid_r(getuid(),pwdptr,pwdbuffer,pwdlinelen,&tempPwdPtr))==0) {
+            baseURL = [[NSURL fileURLWithPath:[NSString stringWithCString:pd.pw_dir encoding:NSUTF8StringEncoding]] URLByAppendingPathComponent:@"Pictures"];
+            printf("The initial directory is:    %s\n", pd.pw_dir);
+        }
+        NSOpenPanel* openPanel = [NSOpenPanel openPanel];
+        [openPanel setCanChooseFiles:NO];
+        [openPanel setCanChooseDirectories:YES];
+        [openPanel setDirectoryURL:baseURL];
+        [openPanel setTitle:@"Choose Output Directory"];
+        [openPanel setMessage:@"One image for each batch processed movie will be saved to the output directory."];
+        [openPanel setPrompt:@"Choose"];
+        [openPanel beginWithCompletionHandler:^(NSInteger result) {
+            if (result == NSFileHandlingPanelOKButton) {
+                _saveToURL = [[openPanel URL] copy];
+                [self startBatchWithThreads:1];
+            }
+        }];
+        [pool release];
+    }
 }
 
 @end
