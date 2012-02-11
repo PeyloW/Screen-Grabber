@@ -174,7 +174,7 @@
 				CFStringRef strTemp;
 				err = QTSoundDescriptionGetProperty(desc, kQTPropertyClass_Audio, kQTAudioPropertyID_FormatString, sizeof(strTemp), &strTemp, NULL);
 				if (err == noErr) {
-					result = (NSString *)strTemp;
+					result = (__bridge NSString *)strTemp;
 				}
 			}
             DisposeHandle((Handle)desc);

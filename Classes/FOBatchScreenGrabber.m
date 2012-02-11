@@ -72,7 +72,7 @@
     NSArray *result = nil;
     @synchronized(self) {
         if (_urls) {
-            result = [[_urls copy] autorelease];
+            result = [_urls copy];
         } else {
             result = [NSArray array];
         }
@@ -83,7 +83,7 @@
 - (NSArray *)pendingFiles
 {
     if (_urls) {
-        NSMutableArray *files = [[_urls mutableCopy] autorelease];
+        NSMutableArray *files = [_urls mutableCopy];
         uint i, count = [files count];
         for (i = 0; i < count; i++) {
             NSString *file = [[[files objectAtIndex:i] path] lastPathComponent];
@@ -146,64 +146,65 @@
 
 -(void)_processMoviesToURL:(NSURL*)baseURL;
 {
-    NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
     //NSURL* baseURL = [NSURL fileURLWithPath:[@"~/Pictures" stringByExpandingTildeInPath]];
     while (1) {
-        NSURL *nextURL = nil;
-        [self willChangeValueForKey:@"pendingFiles"];
-        [self willChangeValueForKey:@"pendingURLs"];
-        @synchronized(_urls) {
-            if ([_urls count] > 0) {
-                nextURL = [[_urls objectAtIndex:0] retain];
-                [_urls removeObject:nextURL];
-            }
-        }
-        [self didChangeValueForKey:@"pendingURLs"];
-        [self didChangeValueForKey:@"pendingFiles"];    
-        if (nextURL) {
-            id delegate = nil;
-            BOOL shouldProcess = YES;
-            if (_delegate) {
-                shouldProcess = [_delegate batchScreenGrabber:self shouldProcessURL:nextURL withDelegate:&delegate];
-            }
-            if (shouldProcess) {
-                [_delegate batchScreenGrabber:self willProcessURL:nextURL];
-                NSError *error;
-                [self _setCurrentURL:nextURL];
-                FOScreenGrabber *screenGrabber = [[FOScreenGrabber alloc] initWithURL:nextURL error:&error];
-                if (screenGrabber) {
-                    [screenGrabber setDelegate:delegate];
-                    [screenGrabber captureImages:self]; // This could fail...
-                    NSString* name = [[screenGrabber imageURL] lastPathComponent];
-                    NSURL* imageURL = [baseURL URLByAppendingPathComponent:name];                    
-                    [screenGrabber setImageURL:imageURL];
-                    [screenGrabber saveImage:self];     // And this could fail...
-                    [_delegate batchScreenGrabber:self didProcessURL:nextURL];
-                } else {
-                    BOOL shouldStop = NO;
-                    if (_delegate) {
-                        shouldStop = [_delegate batchScreenGrabber:self shouldStopProcessingWithError:error];
-                    }
-                    if (shouldStop) {
-                        [self _setCurrentURL:nil];
-                        break;
-                    }
+        @autoreleasepool {
+            NSURL *nextURL = nil;
+            [self willChangeValueForKey:@"pendingFiles"];
+            [self willChangeValueForKey:@"pendingURLs"];
+            @synchronized(_urls) {
+                if ([_urls count] > 0) {
+                    nextURL = [_urls objectAtIndex:0];
+                    [_urls removeObject:nextURL];
                 }
             }
-            [self _setCurrentURL:nil];
-            [nextURL release];
-        } else {
-            break;
+            [self didChangeValueForKey:@"pendingURLs"];
+            [self didChangeValueForKey:@"pendingFiles"];    
+            if (nextURL) {
+                id delegate = nil;
+                BOOL shouldProcess = YES;
+                if (_delegate) {
+                    shouldProcess = [_delegate batchScreenGrabber:self shouldProcessURL:nextURL withDelegate:&delegate];
+                }
+                if (shouldProcess) {
+                    [_delegate batchScreenGrabber:self willProcessURL:nextURL];
+                    NSError *error;
+                    [self _setCurrentURL:nextURL];
+                    FOScreenGrabber *screenGrabber = [[FOScreenGrabber alloc] initWithURL:nextURL error:&error];
+                    if (screenGrabber) {
+                        [screenGrabber setDelegate:delegate];
+                        [screenGrabber captureImages:self]; // This could fail...
+                        NSString* name = [[screenGrabber imageURL] lastPathComponent];
+                        NSURL* imageURL = [baseURL URLByAppendingPathComponent:name];                    
+                        [screenGrabber setImageURL:imageURL];
+                        [screenGrabber saveImage:self];     // And this could fail...
+                        [_delegate batchScreenGrabber:self didProcessURL:nextURL];
+                    } else {
+                        BOOL shouldStop = NO;
+                        if (_delegate) {
+                            shouldStop = [_delegate batchScreenGrabber:self shouldStopProcessingWithError:error];
+                        }
+                        if (shouldStop) {
+                            [self _setCurrentURL:nil];
+                            break;
+                        }
+                    }
+                }
+                [self _setCurrentURL:nil];
+            } else {
+                break;
+            }
         }
     }
-    [self willChangeValueForKey:@"isProcessing"];
-    @synchronized(self) {
-        _runningThreads--;
+    @autoreleasepool {
+        [self willChangeValueForKey:@"isProcessing"];
+        @synchronized(self) {
+            _runningThreads--;
+        }
+        [self didChangeValueForKey:@"isProcessing"];
+        [[NSWorkspace sharedWorkspace] performSelectorOnMainThread:@selector(openURL:) withObject:baseURL waitUntilDone:NO];
+        //[NSThread exit];
     }
-    [self didChangeValueForKey:@"isProcessing"];
-    [[NSWorkspace sharedWorkspace] performSelectorOnMainThread:@selector(openURL:) withObject:baseURL waitUntilDone:NO];
-    [pool release];
-    //[NSThread exit];
 }
 
 
@@ -213,32 +214,32 @@
     if (_saveToURL) {
         [self _processMoviesToURL:_saveToURL];
     } else {
-        NSAutoreleasePool* pool = [[NSAutoreleasePool alloc] init];
-        //NSURL* baseURL = [[NSFileManager defaultManager] URLForDirectory:NSPicturesDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
-        struct passwd pd;
-        struct passwd* pwdptr=&pd;
-        struct passwd* tempPwdPtr;
-        char pwdbuffer[200];
-        int  pwdlinelen = sizeof(pwdbuffer);
-        NSURL* baseURL = nil;
-        if ((getpwuid_r(getuid(),pwdptr,pwdbuffer,pwdlinelen,&tempPwdPtr))==0) {
-            baseURL = [[NSURL fileURLWithPath:[NSString stringWithCString:pd.pw_dir encoding:NSUTF8StringEncoding]] URLByAppendingPathComponent:@"Pictures"];
-            printf("The initial directory is:    %s\n", pd.pw_dir);
-        }
-        NSOpenPanel* openPanel = [NSOpenPanel openPanel];
-        [openPanel setCanChooseFiles:NO];
-        [openPanel setCanChooseDirectories:YES];
-        [openPanel setDirectoryURL:baseURL];
-        [openPanel setTitle:@"Choose Output Directory"];
-        [openPanel setMessage:@"One image for each batch processed movie will be saved to the output directory."];
-        [openPanel setPrompt:@"Choose"];
-        [openPanel beginWithCompletionHandler:^(NSInteger result) {
-            if (result == NSFileHandlingPanelOKButton) {
-                _saveToURL = [[openPanel URL] copy];
-                [self startBatchWithThreads:1];
+        @autoreleasepool {
+            //NSURL* baseURL = [[NSFileManager defaultManager] URLForDirectory:NSPicturesDirectory inDomain:NSUserDomainMask appropriateForURL:nil create:NO error:NULL];
+            struct passwd pd;
+            struct passwd* pwdptr=&pd;
+            struct passwd* tempPwdPtr;
+            char pwdbuffer[200];
+            int  pwdlinelen = sizeof(pwdbuffer);
+            NSURL* baseURL = nil;
+            if ((getpwuid_r(getuid(),pwdptr,pwdbuffer,pwdlinelen,&tempPwdPtr))==0) {
+                baseURL = [[NSURL fileURLWithPath:[NSString stringWithCString:pd.pw_dir encoding:NSUTF8StringEncoding]] URLByAppendingPathComponent:@"Pictures"];
+                printf("The initial directory is:    %s\n", pd.pw_dir);
             }
-        }];
-        [pool release];
+            NSOpenPanel* openPanel = [NSOpenPanel openPanel];
+            [openPanel setCanChooseFiles:NO];
+            [openPanel setCanChooseDirectories:YES];
+            [openPanel setDirectoryURL:baseURL];
+            [openPanel setTitle:@"Choose Output Directory"];
+            [openPanel setMessage:@"One image for each batch processed movie will be saved to the output directory."];
+            [openPanel setPrompt:@"Choose"];
+            [openPanel beginWithCompletionHandler:^(NSInteger result) {
+                if (result == NSFileHandlingPanelOKButton) {
+                    _saveToURL = [[openPanel URL] copy];
+                    [self startBatchWithThreads:1];
+                }
+            }];
+        }
     }
 }
 

@@ -32,7 +32,7 @@
 
 - (IBAction)batchProcessMovies:(id)sender
 {
-    NSOpenPanel* panel = [[NSOpenPanel openPanel] retain];
+    NSOpenPanel* panel = [NSOpenPanel openPanel];
     [panel setCanChooseDirectories:YES];
     [panel setAllowsMultipleSelection:YES];
     [panel beginWithCompletionHandler:^(NSInteger result) 
@@ -74,10 +74,14 @@
 
 - (IBAction)toggleBatchProcessingPanel:(id)sender
 {
-    if ([batchProcessingPanel isVisible]) {
-        [batchProcessingPanel orderOut:sender];
+    if ([NSThread isMainThread]) {
+        if ([batchProcessingPanel isVisible]) {
+            [batchProcessingPanel orderOut:sender];
+        } else {
+            [batchProcessingPanel makeKeyAndOrderFront:sender];
+        }
     } else {
-        [batchProcessingPanel makeKeyAndOrderFront:sender];
+        [self performSelectorOnMainThread:_cmd withObject:sender waitUntilDone:YES];
     }
 }
 

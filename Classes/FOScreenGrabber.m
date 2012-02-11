@@ -79,13 +79,6 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     return result;
 }
 
--(void)dealloc;
-{
-    [_movie release];
-    [_imageURL release];
-    [_image release];
-    [super dealloc];
-}
 
 - (id)delegate
 {
@@ -118,8 +111,7 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     dispatch_sync_on_main_queue(^(void) {
         [self willChangeValueForKey:@"movie"];
         [self willChangeValueForKey:@"previewMovie"];
-        [_movie autorelease];
-        _movie = [movie retain];
+        _movie = movie;
         [self didChangeValueForKey:@"previewMovie"];
         [self didChangeValueForKey:@"movie"];
     });
@@ -134,9 +126,9 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
 {
     __block NSURL* result = nil;
     dispatch_sync_on_main_queue(^(void) {    
-        result = [[_movie attributeForKey:QTMovieURLAttribute] retain];
+        result = [_movie attributeForKey:QTMovieURLAttribute];
     });
-    return [result autorelease];
+    return result;
 }
 
 - (NSURL *)imageURL
@@ -151,7 +143,6 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
 - (void)setImageURL:(NSURL *)url
 {
     [self willChangeValueForKey:@"imageURL"];
-    [_imageURL autorelease];
     _imageURL = [url copy];
     [self didChangeValueForKey:@"imageURL"];
 }
@@ -345,8 +336,7 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     dispatch_sync_on_main_queue(^(void) {
         [self willChangeValueForKey:@"image"];
         if (_image != image) {
-            [_image autorelease];
-            _image = [image retain];
+            _image = image;
         }
         [self didChangeValueForKey:@"image"];
         if ([self isProcessing]) {
@@ -436,12 +426,12 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
     NSFont *font = [NSFont fontWithName:@"Lucida Grande" size:12.0];
     [attrs setObject:font forKey:NSFontAttributeName];
     [attrs setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
-    NSShadow *shadow = [[[NSShadow alloc] init] autorelease];
+    NSShadow *shadow = [[NSShadow alloc] init];
     [shadow setShadowOffset:NSMakeSize(1.0, -2.0)];
     [shadow setShadowBlurRadius:1.25];
     [shadow setShadowColor:[NSColor blackColor]];
     [attrs setObject:shadow forKey:NSShadowAttributeName];
-    return [[[NSAttributedString alloc] initWithString:time attributes:attrs] autorelease];
+    return [[NSAttributedString alloc] initWithString:time attributes:attrs];
 }
 
 
@@ -472,7 +462,10 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
                                     code:1
                                 userInfo:[NSDictionary dictionaryWithObject:@"Could not open movie file."
                                                                      forKey:NSLocalizedDescriptionKey]];
-        goto signalError;
+        dispatch_async(dispatch_get_main_queue(), ^(void) {
+            [_delegate screenGrabber:self error:error];
+        });
+        return;
     }
     
     NSSize smallSize;
@@ -530,13 +523,16 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
             
             __block NSImage *frame;
             dispatch_sync(dispatch_get_main_queue(), ^(void) {
-                frame = [[_movie frameImageAtTime:captureTime
+                frame = (NSImage*)[_movie frameImageAtTime:captureTime
                                   withAttributes:attr 
-                                           error:&error] retain];
+                                           error:&error];
             });
             //            [QTMovie exitQTKitOnThread];
             if (frame == nil) {
-                goto signalError;
+                dispatch_async(dispatch_get_main_queue(), ^(void) {
+                    [_delegate screenGrabber:self error:error];
+                });
+                return;
             }
             
             [frame setFlipped:YES];
@@ -547,7 +543,6 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
             }
             NSRect srcRect = NSMakeRect(0, 0, [frame size].width, [frame size].height); 
             [frame drawInRect:dstRect fromRect:srcRect operation:NSCompositeCopy fraction:1.0];
-            [frame release];
             
             if (addBorder) {
                 [[[NSColor blackColor] colorWithAlphaComponent:0.5] set];
@@ -572,10 +567,6 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
                                 withObject:self 
                              waitUntilDone:NO];
     return;
-signalError:
-    dispatch_async(dispatch_get_main_queue(), ^(void) {
-        [_delegate screenGrabber:self error:error];
-    });
 }
 
 @end

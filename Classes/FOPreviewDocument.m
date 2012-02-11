@@ -137,7 +137,7 @@
 
 - (void)screenGrabber:(FOScreenGrabber *)screenGrabber error:(NSError *)error
 { 
-    NSAlert *alert = [NSAlert alertWithError:error];
+    NSAlert *alert = error ? [NSAlert alertWithError:error] : nil;
     [NSApp endSheet:progressSheet];
     [progressSheet orderOut:self];
     [alert beginSheetModalForWindow:mainWindow modalDelegate:nil didEndSelector:NULL contextInfo:NULL];
