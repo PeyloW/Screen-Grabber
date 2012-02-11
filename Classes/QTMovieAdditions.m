@@ -72,113 +72,31 @@
     return [NSString stringWithFormat:@"%dx%d", (int)size.width, (int)size.height, nil];
 }
 
-- (NSString *)videoKbps
+- (NSString *)videoDescription;
 {
-	NSString *result = @"?";
-    NSArray *tracks;
+    NSString *result = @"<Unknown video codec>";
+    QTTrack *track;
     if ([self haveMPEGTrack]) {
-        tracks = [self tracksOfMediaType:QTMediaTypeMPEG];
+        track = [[self tracksOfMediaType:QTMediaTypeMPEG] lastObject];
     } else {
-        tracks = [self tracksOfMediaType:QTMediaTypeVideo];
+        track = [[self tracksOfMediaType:QTMediaTypeVideo] lastObject];
     }
-    if ([tracks count] > 0) {
-		QTTrack *track = [tracks objectAtIndex:0];
-		float seconds = [self _durationInSeconds];
-		SInt64 size = [[track media] mediaSize];
-		if (size > 0) {
-			float kbps = (size / (1024.0 / 8.0)) / seconds;
-			result = [NSString stringWithFormat:@"%.2f", kbps, nil];
-		}
-	}
-	return result;
-}
-
-- (NSString *)videoCodec
-{
-    NSString *result = @"<Unknown codec>";
-    if ([self haveMPEGTrack]) {
-        return @"MPEG1 Muxed";
-    }
-    NSArray *tracks = [self tracksOfMediaType:QTMediaTypeVideo];
-    if ([tracks count] > 0) {
-        QTMedia *media = [[tracks objectAtIndex:0] media];
-        ImageDescriptionHandle desc = (ImageDescriptionHandle)NewHandleClear(sizeof(ImageDescription));
-        if (desc) {
-            GetMediaSampleDescription([media quickTimeMedia], 1, (SampleDescriptionHandle)desc);
-            OSErr err = GetMoviesError();
-            if (err == noErr) {
-                result = [NSString stringWithUTF8String:p2cstr((**desc).name)];
-                if ([result length] == 0) {
-					CodecInfo info;
-					err = GetCodecInfo(&info, (**desc).cType, 0);
-					if (err == noErr) {
-						result = [NSString stringWithUTF8String:p2cstr(info.typeName)];
-					} else {
-						char *bytes = (char *)&((**desc).cType);
-						result = [NSString stringWithFormat:@"%c%c%c%c", bytes[0], bytes[1], bytes[2], bytes[3], nil];
-					}
-				}
-            }
-            DisposeHandle((Handle)desc);
-        }
+    if (track) {
+        result = [track attributeForKey:QTTrackFormatSummaryAttribute];
+        //long sampleCount = [[[track media] attributeForKey:QTMediaSampleCountAttribute] longValue];
+        //result = [result stringByAppendingFormat:@", %.fkbit/s", sampleCount / (1024.0 / 8)];
     }
     return result;
 }
 
-- (NSString *)audioFrequenzy
+- (NSString *)audioDescription;
 {
-    NSString *result = @"?";
-    NSArray *tracks = [self tracksOfMediaType:QTMediaTypeSound];
-    if ([tracks count] > 0) {
-        QTMedia *media = [[tracks objectAtIndex:0] media];
-        SoundDescriptionHandle desc = (SoundDescriptionHandle)NewHandleClear(sizeof(SoundDescriptionHandle));
-        if (desc) {
-            GetMediaSampleDescription([media quickTimeMedia], 1, (SampleDescriptionHandle)desc);
-            OSErr err = GetMoviesError();
-            if (err == noErr) {
-                result = [NSString stringWithFormat:@"%g", ((**desc).sampleRate >> 16) / 1000.0, nil];
-            }
-            DisposeHandle((Handle)desc);
-        }
-    }
-    return result;
-}
-
-- (NSString *)audioKbps
-{
-	NSString *result = @"?";
-    NSArray *tracks = [self tracksOfMediaType:QTMediaTypeSound];
-    if ([tracks count] > 0) {
-		QTTrack *track = [tracks objectAtIndex:0];
-		float seconds = [self _durationInSeconds];
-		SInt64 size = [[track media] mediaSize];
-		if (size > 0) {
-			float kbps = (size / (1024.0 / 8.0)) / seconds;
-			result = [NSString stringWithFormat:@"%.2f", kbps, nil];
-		}
-	}
-	return result;
-}
-
-- (NSString *)audioCodec
-{
-    NSString *result = @"<Unknown codec>";
-    NSArray *tracks = [self tracksOfMediaType:QTMediaTypeSound];
-    if ([tracks count] > 0) {
-        QTMedia *media = [[tracks objectAtIndex:0] media];
-        SoundDescriptionHandle desc = (SoundDescriptionHandle)NewHandleClear(sizeof(SoundDescriptionHandle));
-        if (desc) { 
-            GetMediaSampleDescription([media quickTimeMedia], 1, (SampleDescriptionHandle)desc);
-            OSErr err = GetMoviesError();
-            if (err == noErr) {
-				CFStringRef strTemp;
-				err = QTSoundDescriptionGetProperty(desc, kQTPropertyClass_Audio, kQTAudioPropertyID_FormatString, sizeof(strTemp), &strTemp, NULL);
-				if (err == noErr) {
-					result = (__bridge NSString *)strTemp;
-				}
-			}
-            DisposeHandle((Handle)desc);
-        }
+    NSString *result = @"<Unknown audio codec>";
+    QTTrack *track = [[self tracksOfMediaType:QTMediaTypeSound] lastObject];
+    if (track) {
+        result = [track attributeForKey:QTTrackFormatSummaryAttribute];
+        //long sampleCount = [[[track media] attributeForKey:QTMediaSampleCountAttribute] longValue];
+        //result = [result stringByAppendingFormat:@", %.fkbit/s", sampleCount / (1024.0 / 8)];
     }
     return result;
 }
@@ -232,14 +150,9 @@
 
 - (SInt64)mediaSize
 {
-    Media media = [self quickTimeMedia];
-	SInt64 size;
-	TimeValue64 start = GetMediaDisplayStartTime(media);
-	TimeValue64 duration = GetMediaDisplayDuration(media);
-	OSErr err = GetMediaDataSizeTime64(media, start, duration, &size);
-	if (err == noErr) {
-		return size;
-	}
+    for (NSString *key in [self attributeKeys]) {
+        NSLog(@"%@ : '%@'", key, [self attributeForKey:key]);
+    }
 	return 0;
 }
 

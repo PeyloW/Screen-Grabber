@@ -386,18 +386,12 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
         NSString *video = @"\tVideo:\t";
         NSString *audio = @"\tAudio:\t";
         if ([movie haveVideoTrack] || [movie haveMPEGTrack]) {
-            NSString *videoSize = [movie videoResolution];
-            NSString *videoKbps = [movie videoKbps];
-            NSString *videoCodec = [movie videoCodec];
-            video = [video stringByAppendingFormat:@"%@pixels, %@kbit/s, %@", videoSize, videoKbps, videoCodec, nil];
+            video = [video stringByAppendingString:[movie videoDescription]];
         }
         if ([movie haveAudioTrack]) {
-            NSString *audioHz = [movie audioFrequenzy];
-            NSString *audioKbps = [movie audioKbps];
-            NSString *audioCodec = [movie audioCodec];
-            audio = [audio stringByAppendingFormat:@"%@kHz, %@kbit/s, %@", audioHz, audioKbps, audioCodec, nil];
+            audio = [audio stringByAppendingString:[movie audioDescription]];
         } else if ([movie haveMPEGTrack]) {
-            audio = [audio stringByAppendingFormat:@"%@?", [movie videoCodec], nil];
+            audio = [audio stringByAppendingFormat:@"%@?", [movie videoDescription], nil];
         }
         NSString *text = [NSString stringWithFormat:@"%@ (%@)\n%@\n%@", name, length, video, audio, nil];
         

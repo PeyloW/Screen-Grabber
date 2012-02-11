@@ -31,13 +31,8 @@
 
 - (NSSize)naturalSize;
 
-- (NSString *)videoResolution;
-- (NSString *)videoKbps;
-- (NSString *)videoCodec;
-
-- (NSString *)audioFrequenzy;
-- (NSString *)audioKbps;
-- (NSString *)audioCodec;
+- (NSString *)videoDescription;
+- (NSString *)audioDescription;
 
 -(QTMovieLoadState)loadState;
 

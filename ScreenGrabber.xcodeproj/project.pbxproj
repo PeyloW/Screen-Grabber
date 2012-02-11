@@ -402,6 +402,7 @@
 		C05733C808A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = "Screen Grabber.entitlements";
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -409,6 +410,7 @@
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "Screen Grabber";
+				VALID_ARCHS = "${ARCHS_STANDARD_64_BIT}";
 				WRAPPER_EXTENSION = app;
 				ZERO_LINK = YES;
 			};
@@ -417,12 +419,14 @@
 		C05733C908A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_ENTITLEMENTS = "Screen Grabber.entitlements";
 				GCC_INCREASE_PRECOMPILED_HEADER_SHARING = YES;
 				INFOPLIST_FILE = Info.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "Screen Grabber";
+				VALID_ARCHS = "${ARCHS_STANDARD_64_BIT}";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
