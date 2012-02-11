@@ -398,7 +398,7 @@ static void dispatch_sync_on_main_queue(dispatch_block_t b) {
         NSMutableDictionary *attrs = [NSMutableDictionary dictionary];
         NSFont *font = [NSFont fontWithName:@"Lucida Grande Bold" size:12.0];
         [attrs setObject:font forKey:NSFontAttributeName];
-        [attrs setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
+        [attrs setObject:[FOPrefs fontColor] forKey:NSForegroundColorAttributeName];
         NSShadow *shadow = [[NSShadow alloc] init];
         [shadow setShadowOffset:NSMakeSize(1.0, -2.0)];
         [shadow setShadowBlurRadius:1.25];
